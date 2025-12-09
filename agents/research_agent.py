@@ -77,14 +77,14 @@ class ResearchAgent:
 ## Output Requirements
 
 Return structured research as JSON:
-{
+{{
   "key_insights": ["3-5 specific, actionable insights with stats/sources"],
-  "statistics": [{"stat": "X% of Y do Z", "source": "URL", "date": "YYYY-MM"}],
-  "quotes": [{"quote": "...", "author": "Name & Title", "source": "URL", "context": "Why this matters"}],
+  "statistics": [{{"stat": "X% of Y do Z", "source": "URL", "date": "YYYY-MM"}}],
+  "quotes": [{{"quote": "...", "author": "Name & Title", "source": "URL", "context": "Why this matters"}}],
   "contrarian_angles": ["Angles that challenge conventional wisdom, backed by data"],
   "user_pain_points": ["Specific pain points (for Product goal only)"],
   "recommended_focus": "1-2 sentence suggestion on strongest angle based on research quality"
-}
+}}
 
 ## Quality Standards
 - At least 2 high-quality sources (Tier 1 or 2)

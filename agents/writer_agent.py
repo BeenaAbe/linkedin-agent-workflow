@@ -108,7 +108,7 @@ Formula:
 
 Return ONLY valid JSON in this exact structure:
 
-{
+{{
   "hooks": [
     "Controversial hook option",
     "Question hook option",
@@ -117,16 +117,16 @@ Return ONLY valid JSON in this exact structure:
   "post_body": "Full post without hook. Use \\\\n\\\\n for line breaks. Copy-paste ready.",
   "cta": "Call to action that matches the Goal",
   "hashtags": ["#tag1", "#tag2", "#tag3", "#tag4", "#tag5"],
-  "visual_asset": {
+  "visual_asset": {{
     "format": "carousel|video|photo|poll|text-only",
     "suggestion": "Detailed description of what visual to create",
     "generation_prompt": "DALL-E/Midjourney prompt (if image-based)",
     "carousel_outline": ["Slide 1 title", "Slide 2 title"],
     "poll_options": ["Option 1", "Option 2", "Option 3", "Option 4"]
-  },
+  }},
   "character_count": 1234,
   "estimated_read_time": "45 seconds"
-}
+}}
 
 ## Quality Checklist
 
@@ -154,7 +154,7 @@ Context: {context}
 Research Brief:
 {research_brief}
 
-Generate a compelling LinkedIn post following all guidelines above. Focus on the "{goal}" goal type for CTA and visual asset selection. Return only valid JSON.""")
+Generate a compelling LinkedIn post following all guidelines above. Use the research insights, statistics, and quotes from the research brief to create a data-backed post. Focus on the "{goal}" goal type for CTA and visual asset selection. Return only valid JSON.""")
         ])
 
     def write(self, state: Dict[str, Any]) -> Dict[str, Any]:
