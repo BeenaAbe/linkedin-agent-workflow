@@ -1,8 +1,11 @@
 """Notion API client for reading and updating content pipeline"""
 
 import os
+import json
+from datetime import datetime
+from pathlib import Path
 from notion_client import Client
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 
 class NotionClient:
@@ -11,6 +14,7 @@ class NotionClient:
     def __init__(self):
         self.client = Client(auth=os.getenv("NOTION_TOKEN"))
         self.database_id = os.getenv("NOTION_DATABASE_ID")
+        self.state_file = Path(".last_processed")
 
     def get_next_idea(self) -> Optional[Dict[str, Any]]:
         """Query Notion for the next idea with Status = 'Idea'"""
@@ -152,3 +156,123 @@ class NotionClient:
         if not prop or not prop.get("select"):
             return ""
         return prop["select"]["name"] if prop["select"] else ""
+
+    # Timestamp tracking methods
+    def get_last_processed_time(self) -> Optional[str]:
+        """Get the timestamp of the last processed item"""
+        if not self.state_file.exists():
+            return None
+
+        try:
+            with open(self.state_file, 'r') as f:
+                data = json.load(f)
+                return data.get('last_processed')
+        except (json.JSONDecodeError, IOError):
+            return None
+
+    def update_last_processed_time(self, timestamp: str = None):
+        """Update the last processed timestamp"""
+        if timestamp is None:
+            timestamp = datetime.utcnow().isoformat() + "Z"
+
+        try:
+            with open(self.state_file, 'w') as f:
+                json.dump({'last_processed': timestamp}, f)
+        except IOError as e:
+            print(f"⚠️  Warning: Could not save timestamp: {e}")
+
+    def get_all_pending_ideas(self) -> List[Dict[str, Any]]:
+        """Get all ideas with Status = 'Idea' (for batch processing)"""
+        try:
+            response = self.client.databases.query(
+                database_id=self.database_id,
+                filter={
+                    "property": "Status",
+                    "status": {
+                        "equals": "Idea"
+                    }
+                },
+                sorts=[
+                    {
+                        "timestamp": "created_time",
+                        "direction": "ascending"
+                    }
+                ]
+            )
+
+            results = response.get("results", [])
+            ideas = []
+
+            for page in results:
+                props = page["properties"]
+                ideas.append({
+                    "page_id": page["id"],
+                    "topic": self._get_title(props.get("Name")),
+                    "goal": self._get_select(props.get("Goal")),
+                    "context": self._get_rich_text(props.get("Context/Notes", {})),
+                    "created_time": page.get("created_time")
+                })
+
+            return ideas
+
+        except Exception as e:
+            print(f"❌ Error querying Notion for all ideas: {e}")
+            return []
+
+    def get_new_ideas(self, since_timestamp: str = None) -> List[Dict[str, Any]]:
+        """Get ideas created after the specified timestamp"""
+        if since_timestamp is None:
+            since_timestamp = self.get_last_processed_time()
+
+        # If no timestamp, fall back to get_all_pending_ideas
+        if since_timestamp is None:
+            return self.get_all_pending_ideas()
+
+        try:
+            # Build filter with both status and timestamp
+            filter_conditions = {
+                "and": [
+                    {
+                        "property": "Status",
+                        "status": {
+                            "equals": "Idea"
+                        }
+                    },
+                    {
+                        "timestamp": "created_time",
+                        "created_time": {
+                            "after": since_timestamp
+                        }
+                    }
+                ]
+            }
+
+            response = self.client.databases.query(
+                database_id=self.database_id,
+                filter=filter_conditions,
+                sorts=[
+                    {
+                        "timestamp": "created_time",
+                        "direction": "ascending"
+                    }
+                ]
+            )
+
+            results = response.get("results", [])
+            ideas = []
+
+            for page in results:
+                props = page["properties"]
+                ideas.append({
+                    "page_id": page["id"],
+                    "topic": self._get_title(props.get("Name")),
+                    "goal": self._get_select(props.get("Goal")),
+                    "context": self._get_rich_text(props.get("Context/Notes", {})),
+                    "created_time": page.get("created_time")
+                })
+
+            return ideas
+
+        except Exception as e:
+            print(f"❌ Error querying Notion for new ideas: {e}")
+            return []

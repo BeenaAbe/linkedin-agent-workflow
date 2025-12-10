@@ -1,0 +1,11 @@
+[theme]
+primaryColor = "#0077B5"  # LinkedIn Blue
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F3F6F8"
+textColor = "#000000"
+font = "sans serif"
+
+[server]
+headless = true
+enableCORS = false
+enableXsrfProtection = true

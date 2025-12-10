@@ -1,29 +1,30 @@
 """
-LinkedIn Content Engine - Streamlit Web Interface
-Interactive testing and monitoring dashboard
+LinkedIn Content Engine - Enhanced Streamlit Web Interface
+Production-grade UI with modern design and advanced features
 """
 
 import streamlit as st
 import os
+import pyperclip
+import plotly.graph_objects as go
 from dotenv import load_dotenv
 from workflow import LinkedInWorkflow, AdaptiveLinkedInWorkflow
 from integrations.notion_client import NotionClient
 from integrations.slack_notifier import SlackNotifier
 import time
 from datetime import datetime
+import json
 
 # Load environment variables
 load_dotenv()
 
 # Also check Streamlit secrets (for cloud deployment)
-# This allows using either .env (local) or secrets.toml (cloud)
 try:
     if hasattr(st, 'secrets') and len(st.secrets) > 0:
-        # Override with Streamlit secrets if available
         for key in st.secrets:
             os.environ[key] = st.secrets[key]
 except Exception:
-    pass  # Fall back to .env if secrets not configured
+    pass
 
 # Page configuration
 st.set_page_config(
@@ -33,40 +34,241 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
+# Enhanced Custom CSS
 st.markdown("""
 <style>
+    /* Main header with LinkedIn gradient */
     .main-header {
-        font-size: 3rem;
-        font-weight: bold;
+        font-size: 3.5rem;
+        font-weight: 800;
         text-align: center;
-        padding: 1rem 0;
-        background: linear-gradient(90deg, #0077B5, #00A0DC);
+        padding: 1.5rem 0;
+        background: linear-gradient(135deg, #0077B5 0%, #00A0DC 50%, #0077B5 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-size: 200% 200%;
+        animation: gradient 3s ease infinite;
     }
-    .status-box {
-        padding: 1rem;
-        border-radius: 0.5rem;
+
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Hook cards */
+    .hook-card {
+        background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 5px solid #0077B5;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 1rem 0;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .hook-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 119, 181, 0.15);
+    }
+
+    .hook-type-badge {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.8rem;
+    }
+
+    .badge-controversial {
+        background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+        color: white;
+    }
+
+    .badge-question {
+        background: linear-gradient(135deg, #4ECDC4, #44A08D);
+        color: white;
+    }
+
+    .badge-story {
+        background: linear-gradient(135deg, #A8E6CF, #56AB91);
+        color: white;
+    }
+
+    .hook-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #2C3E50;
+        font-weight: 500;
+    }
+
+    .char-count {
+        font-size: 0.9rem;
+        color: #7F8C8D;
+        margin-top: 0.5rem;
+    }
+
+    /* Metrics */
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0.5rem 0;
+    }
+
+    .metric-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Progress indicators */
+    .progress-container {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1.5rem;
         margin: 1rem 0;
     }
+
+    .progress-step {
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .progress-step:last-child {
+        border-bottom: none;
+    }
+
+    .progress-icon {
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+
+    .progress-text {
+        flex: 1;
+        font-size: 1rem;
+        color: #495057;
+    }
+
+    /* Status boxes */
+    .status-box {
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin: 1rem 0;
+        border-left: 5px solid;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
     .success-box {
-        background-color: #d4edda;
-        border-left: 4px solid #28a745;
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border-left-color: #28a745;
+        color: #155724;
     }
+
     .error-box {
-        background-color: #f8d7da;
-        border-left: 4px solid #dc3545;
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        border-left-color: #dc3545;
+        color: #721c24;
     }
+
+    .warning-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border-left-color: #ffc107;
+        color: #856404;
+    }
+
     .info-box {
-        background-color: #d1ecf1;
-        border-left: 4px solid #0c5460;
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        border-left-color: #17a2b8;
+        color: #0c5460;
     }
-    .metric-card {
-        background-color: #f8f9fa;
+
+    /* LinkedIn preview */
+    .linkedin-preview {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
         padding: 1.5rem;
-        border-radius: 0.5rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-width: 600px;
+        margin: 1rem auto;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .linkedin-preview-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .linkedin-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0077B5, #00A0DC);
+        margin-right: 12px;
+    }
+
+    .linkedin-preview-content {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: rgba(0, 0, 0, 0.9);
+        white-space: pre-wrap;
+    }
+
+    /* Queue card */
+    .queue-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        transition: all 0.3s;
+    }
+
+    .queue-card:hover {
+        border-color: #0077B5;
+        box-shadow: 0 4px 8px rgba(0, 119, 181, 0.1);
+    }
+
+    /* Button enhancements */
+    .stButton>button {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 119, 181, 0.3);
+    }
+
+    /* Copy button */
+    .copy-btn {
+        background: linear-gradient(135deg, #0077B5, #00A0DC);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .copy-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 119, 181, 0.4);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -92,6 +294,10 @@ def init_session_state():
         st.session_state.results = None
     if 'logs' not in st.session_state:
         st.session_state.logs = []
+    if 'progress' not in st.session_state:
+        st.session_state.progress = []
+    if 'history' not in st.session_state:
+        st.session_state.history = []
 
 
 def add_log(message, level="info"):
@@ -104,9 +310,146 @@ def add_log(message, level="info"):
     })
 
 
+def add_progress(phase, status, details=""):
+    """Add progress update"""
+    st.session_state.progress.append({
+        "phase": phase,
+        "status": status,
+        "details": details,
+        "timestamp": datetime.now().strftime("%H:%M:%S")
+    })
+
+
+def get_hook_type(index):
+    """Get hook type based on index"""
+    types = ["controversial", "question", "story"]
+    labels = ["🔥 Controversial", "❓ Question", "📖 Story"]
+    return types[index % 3], labels[index % 3]
+
+
+def calculate_quality_score(result):
+    """Calculate quality score based on best practices"""
+    score = 100
+    post_body = result.get("post_body", "")
+    hooks = result.get("hooks", [])
+
+    # Character count (optimal: 800-1300)
+    char_count = len(post_body)
+    if char_count < 200:
+        score -= 30
+    elif char_count > 1500:
+        score -= 20
+    elif char_count < 800 or char_count > 1300:
+        score -= 10
+
+    # Hook diversity
+    if len(hooks) < 3:
+        score -= 20
+
+    # Line breaks check (should have multiple line breaks)
+    line_breaks = post_body.count('\n\n')
+    if line_breaks < 3:
+        score -= 15
+
+    # Hashtags
+    hashtags = result.get("hashtags", [])
+    if len(hashtags) < 3 or len(hashtags) > 5:
+        score -= 10
+
+    return max(0, score)
+
+
+def create_character_gauge(char_count):
+    """Create a gauge chart for character count"""
+    fig = go.Figure(go.Indicator(
+        mode="gauge+number+delta",
+        value=char_count,
+        domain={'x': [0, 1], 'y': [0, 1]},
+        title={'text': "Character Count", 'font': {'size': 20}},
+        delta={'reference': 1200, 'increasing': {'color': "#FF6B6B"}},
+        gauge={
+            'axis': {'range': [None, 1500], 'tickwidth': 1, 'tickcolor': "darkblue"},
+            'bar': {'color': "#0077B5"},
+            'bgcolor': "white",
+            'borderwidth': 2,
+            'bordercolor': "gray",
+            'steps': [
+                {'range': [0, 800], 'color': '#FFE5E5'},
+                {'range': [800, 1300], 'color': '#E5F5E5'},
+                {'range': [1300, 1500], 'color': '#FFF5E5'}
+            ],
+            'threshold': {
+                'line': {'color': "red", 'width': 4},
+                'thickness': 0.75,
+                'value': 1400
+            }
+        }
+    ))
+
+    fig.update_layout(
+        height=250,
+        margin=dict(l=20, r=20, t=50, b=20),
+        paper_bgcolor="rgba(0,0,0,0)",
+        font={'color': "#2C3E50", 'family': "Arial"}
+    )
+
+    return fig
+
+
+def render_hook_card(hook, index):
+    """Render a beautiful hook card"""
+    hook_type, hook_label = get_hook_type(index)
+    char_count = len(hook)
+
+    # Create badge class
+    badge_class = f"badge-{hook_type}"
+
+    hook_html = f"""
+    <div class="hook-card">
+        <span class="hook-type-badge {badge_class}">{hook_label}</span>
+        <div class="hook-text">{hook}</div>
+        <div class="char-count">📝 {char_count} characters</div>
+    </div>
+    """
+
+    st.markdown(hook_html, unsafe_allow_html=True)
+
+    # Copy button
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col2:
+        if st.button(f"📋 Copy", key=f"copy_hook_{index}", use_container_width=True):
+            try:
+                pyperclip.copy(hook)
+                st.success("✅ Copied!")
+            except:
+                st.info("Copy the text above manually")
+    with col3:
+        if st.button(f"🔄 Regenerate", key=f"regen_hook_{index}", use_container_width=True):
+            st.info("🚧 Regeneration coming soon!")
+
+
+def render_linkedin_preview(post_body, hooks):
+    """Render LinkedIn mobile preview"""
+    preview_html = f"""
+    <div class="linkedin-preview">
+        <div class="linkedin-preview-header">
+            <div class="linkedin-avatar"></div>
+            <div>
+                <div style="font-weight: 600; font-size: 0.95rem;">Your Name</div>
+                <div style="font-size: 0.8rem; color: #666;">Your Title • Just now • 🌐</div>
+            </div>
+        </div>
+        <div class="linkedin-preview-content">{hooks[0] if hooks else ''}\n\n{post_body[:300]}{'...' if len(post_body) > 300 else ''}</div>
+    </div>
+    """
+    st.markdown(preview_html, unsafe_allow_html=True)
+
+
 def run_workflow(input_data, workflow_type="adaptive"):
-    """Run the workflow with given input"""
+    """Run the workflow with progress tracking"""
     try:
+        st.session_state.progress = []
+        add_progress("🚀 Starting", "active", f"Topic: {input_data['topic']}")
         add_log(f"Starting workflow for: {input_data['topic']}", "info")
 
         # Select workflow type
@@ -117,16 +460,45 @@ def run_workflow(input_data, workflow_type="adaptive"):
             workflow = LinkedInWorkflow()
             add_log("Using Simple Sequential Workflow", "info")
 
-        # Run workflow
+        # Research phase
+        add_progress("🔍 Research", "active", "Searching web sources...")
         add_log("🔍 Researching topic...", "info")
+
+        time.sleep(0.5)  # Brief pause for UI update
+
+        # Run workflow
         result = workflow.run(input_data)
 
+        add_progress("✅ Complete", "complete", "Draft generated successfully!")
         add_log("✅ Workflow completed successfully!", "success")
+
         return result
 
     except Exception as e:
+        add_progress("❌ Error", "error", str(e))
         add_log(f"❌ Error: {str(e)}", "error")
         raise
+
+
+def render_progress_tracker():
+    """Render live progress tracker"""
+    if st.session_state.progress:
+        st.markdown('<div class="progress-container">', unsafe_allow_html=True)
+        st.subheader("⏳ Progress")
+
+        for item in st.session_state.progress:
+            status_icon = "✅" if item["status"] == "complete" else "❌" if item["status"] == "error" else "⏳"
+            st.markdown(f"""
+            <div class="progress-step">
+                <div class="progress-icon">{status_icon}</div>
+                <div class="progress-text">
+                    <strong>{item["phase"]}</strong><br>
+                    <small>{item["details"]}</small>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 def main():
@@ -134,6 +506,7 @@ def main():
 
     # Header
     st.markdown('<div class="main-header">🚀 LinkedIn Content Engine</div>', unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #7F8C8D; font-size: 1.1rem; margin-top: -1rem;'>AI-Powered Content Generation with Research & Analytics</p>", unsafe_allow_html=True)
     st.markdown("---")
 
     # Check environment variables
@@ -145,13 +518,13 @@ def main():
 
     # Sidebar
     with st.sidebar:
-        st.header("⚙️ Configuration")
+        st.markdown("## ⚙️ Configuration")
 
         # Workflow type selection
         workflow_type = st.radio(
             "Workflow Type",
             ["adaptive", "simple"],
-            format_func=lambda x: "Adaptive (Quality Checks)" if x == "adaptive" else "Simple Sequential",
+            format_func=lambda x: "✨ Adaptive (Quality Checks)" if x == "adaptive" else "⚡ Simple Sequential",
             help="Adaptive workflow includes self-correction and quality checks"
         )
 
@@ -160,45 +533,47 @@ def main():
         # Mode selection
         mode = st.radio(
             "Mode",
-            ["manual", "notion"],
-            format_func=lambda x: "Manual Input" if x == "manual" else "Notion Integration",
-            help="Manual: Test with custom input\nNotion: Pull from Notion database"
+            ["manual", "notion", "batch"],
+            format_func=lambda x: "✍️ Manual Input" if x == "manual" else "📋 Notion Queue" if x == "notion" else "🔥 Batch Process",
+            help="Manual: Test with custom input\nNotion: Pull from database\nBatch: Process multiple ideas"
         )
 
         st.markdown("---")
 
-        # Environment info
-        st.subheader("📊 Status")
-        st.success("✅ OpenRouter Connected")
-        st.success("✅ Tavily Connected")
+        # Environment status
+        st.markdown("### 📊 Connection Status")
+        st.success("✅ OpenRouter")
+        st.success("✅ Tavily")
         if os.getenv("NOTION_TOKEN"):
-            st.success("✅ Notion Connected")
+            st.success("✅ Notion")
         if os.getenv("SLACK_WEBHOOK_URL"):
-            st.success("✅ Slack Connected")
+            st.success("✅ Slack")
 
         st.markdown("---")
 
-        # Show logs
-        st.subheader("📝 Activity Log")
-        if st.button("Clear Logs"):
+        # Activity log
+        st.markdown("### 📝 Activity Log")
+        if st.button("🗑️ Clear Logs", use_container_width=True):
             st.session_state.logs = []
+            st.rerun()
 
-        # Display logs
-        log_container = st.container()
-        with log_container:
-            if st.session_state.logs:
-                for log in st.session_state.logs[-10:]:  # Show last 10 logs
-                    icon = "ℹ️" if log["level"] == "info" else "✅" if log["level"] == "success" else "❌"
-                    st.text(f"{log['time']} {icon} {log['message']}")
-            else:
-                st.text("No activity yet...")
+        # Display logs in a scrollable container
+        if st.session_state.logs:
+            log_html = "<div style='height: 300px; overflow-y: auto; font-size: 0.85rem; background: #f8f9fa; padding: 0.5rem; border-radius: 8px;'>"
+            for log in st.session_state.logs[-20:]:
+                icon = "ℹ️" if log["level"] == "info" else "✅" if log["level"] == "success" else "❌"
+                log_html += f"<div style='margin: 0.3rem 0;'><code>{log['time']}</code> {icon} {log['message']}</div>"
+            log_html += "</div>"
+            st.markdown(log_html, unsafe_allow_html=True)
+        else:
+            st.info("No activity yet...")
 
-    # Main content
+    # Main content area
     if mode == "manual":
-        st.header("✍️ Manual Input Mode")
-        st.write("Test the workflow with custom input")
+        st.markdown("## ✍️ Manual Input Mode")
+        st.markdown("Test the workflow with custom input for rapid iteration")
 
-        col1, col2 = st.columns(2)
+        col1, col2 = st.columns([2, 1])
 
         with col1:
             topic = st.text_input(
@@ -207,61 +582,83 @@ def main():
                 help="The main topic of your LinkedIn post"
             )
 
+        with col2:
             goal = st.selectbox(
                 "Goal",
                 ["Thought Leadership", "Product", "Educational", "Personal Brand", "Interactive", "Inspirational"],
-                help="The purpose of your post"
+                help="The purpose of your post determines CTA and visual suggestions"
             )
 
+        context = st.text_area(
+            "Context/Notes (Optional)",
+            placeholder="e.g., Lead with the 83% Gartner stat. Contrast chatbots vs real agents. Target PM audience.",
+            help="Additional context, specific stats to include, or special instructions",
+            height=100
+        )
+
+        col1, col2, col3 = st.columns([2, 1, 1])
+        with col1:
+            generate_btn = st.button("🚀 Generate Post", type="primary", disabled=st.session_state.workflow_running, use_container_width=True)
         with col2:
-            context = st.text_area(
-                "Context/Notes (Optional)",
-                placeholder="e.g., Lead with the 83% Gartner stat. Contrast chatbots vs real agents.",
-                help="Additional context or specific instructions",
-                height=100
-            )
+            if st.button("🎲 Random Example", use_container_width=True):
+                st.info("🚧 Coming soon!")
+        with col3:
+            if st.button("💾 Save Draft", use_container_width=True):
+                st.info("🚧 Coming soon!")
 
-        if st.button("🚀 Generate Post", type="primary", disabled=st.session_state.workflow_running):
+        if generate_btn:
             if not topic:
-                st.error("Please enter a topic")
+                st.error("⚠️ Please enter a topic")
             else:
                 st.session_state.workflow_running = True
                 st.session_state.results = None
 
-                with st.spinner("Running workflow..."):
-                    try:
-                        input_data = {
-                            "page_id": "manual-test",
+                # Progress container
+                progress_container = st.empty()
+
+                try:
+                    input_data = {
+                        "page_id": "manual-test",
+                        "topic": topic,
+                        "goal": goal,
+                        "context": context
+                    }
+
+                    with st.spinner("🔮 Generating your LinkedIn post..."):
+                        result = run_workflow(input_data, workflow_type)
+
+                        # Add to history
+                        st.session_state.history.append({
+                            "timestamp": datetime.now(),
                             "topic": topic,
                             "goal": goal,
-                            "context": context
-                        }
+                            "result": result
+                        })
 
-                        result = run_workflow(input_data, workflow_type)
                         st.session_state.results = result
                         st.session_state.workflow_running = False
                         st.rerun()
 
-                    except Exception as e:
-                        st.error(f"Error: {str(e)}")
-                        st.session_state.workflow_running = False
+                except Exception as e:
+                    st.error(f"❌ Error: {str(e)}")
+                    st.session_state.workflow_running = False
 
-    else:  # Notion mode
-        st.header("📋 Notion Integration Mode")
-        st.write("Process ideas from your Notion database")
+    elif mode == "notion":
+        st.markdown("## 📋 Notion Integration Mode")
+        st.markdown("Process ideas directly from your Notion content database")
 
         col1, col2 = st.columns([2, 1])
 
         with col1:
-            st.info("💡 This will fetch the next entry with Status = 'Idea' from your Notion database")
+            st.info("💡 This will fetch and process the next entry with Status = 'Idea' from your Notion database")
 
         with col2:
-            if st.button("🔍 Fetch & Process", type="primary", disabled=st.session_state.workflow_running):
+            if st.button("🔍 Fetch & Process Next", type="primary", disabled=st.session_state.workflow_running, use_container_width=True):
                 st.session_state.workflow_running = True
                 st.session_state.results = None
 
-                with st.spinner("Fetching from Notion..."):
-                    try:
+                try:
+                    with st.spinner("📥 Fetching from Notion..."):
                         notion = NotionClient()
                         idea = notion.get_next_idea()
 
@@ -272,22 +669,19 @@ def main():
                         else:
                             add_log(f"Found idea: {idea['topic']}", "success")
 
-                            # Update status to Researching
+                            # Update status
                             notion.update_status(idea["page_id"], "Researching")
 
                             # Run workflow
                             result = run_workflow(idea, workflow_type)
 
-                            # Update Notion with results
-                            add_log("Updating Notion with research...", "info")
+                            # Update Notion
+                            add_log("📤 Updating Notion with results...", "info")
                             notion.update_with_research(result["page_id"], result["research_brief"])
-
-                            add_log("Updating Notion with draft...", "info")
                             notion.update_with_draft(result["page_id"], result)
 
-                            # Send Slack notification
+                            # Slack notification
                             if os.getenv("SLACK_WEBHOOK_URL"):
-                                add_log("Sending Slack notification...", "info")
                                 slack = SlackNotifier()
                                 slack.send_draft_notification(result)
 
@@ -295,109 +689,269 @@ def main():
                             st.session_state.workflow_running = False
                             st.rerun()
 
-                    except Exception as e:
-                        st.error(f"Error: {str(e)}")
-                        add_log(f"Error: {str(e)}", "error")
-                        st.session_state.workflow_running = False
-
-        # Show current queue status
-        if os.getenv("NOTION_TOKEN"):
-            with st.expander("📊 Queue Status"):
-                try:
-                    notion = NotionClient()
-                    idea = notion.get_next_idea()
-                    if idea:
-                        st.success(f"✅ Next in queue: **{idea['topic']}**")
-                        st.write(f"**Goal:** {idea['goal']}")
-                        if idea['context']:
-                            st.write(f"**Context:** {idea['context']}")
-                    else:
-                        st.info("📭 Queue is empty")
                 except Exception as e:
-                    st.error(f"Could not fetch queue: {str(e)}")
+                    st.error(f"❌ Error: {str(e)}")
+                    add_log(f"Error: {str(e)}", "error")
+                    st.session_state.workflow_running = False
+
+        # Queue preview
+        st.markdown("---")
+        with st.expander("📊 View Queue Status", expanded=True):
+            try:
+                notion = NotionClient()
+                ideas = notion.get_all_pending_ideas()
+
+                if ideas:
+                    st.success(f"✨ {len(ideas)} idea(s) in queue")
+                    for idx, idea in enumerate(ideas[:5], 1):
+                        st.markdown(f"""
+                        <div class="queue-card">
+                            <strong>{idx}. {idea['topic']}</strong><br>
+                            <small>🎯 Goal: {idea['goal']}</small>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                    if len(ideas) > 5:
+                        st.info(f"➕ {len(ideas) - 5} more ideas in queue")
+                else:
+                    st.info("📭 Queue is empty - add ideas to your Notion database!")
+            except Exception as e:
+                st.error(f"Could not fetch queue: {str(e)}")
+
+    else:  # batch mode
+        st.markdown("## 🔥 Batch Processing Mode")
+        st.markdown("Process multiple ideas from Notion in one go")
+
+        try:
+            notion = NotionClient()
+            ideas = notion.get_all_pending_ideas()
+
+            if not ideas:
+                st.info("📭 No pending ideas found in Notion")
+            else:
+                st.success(f"✨ Found {len(ideas)} pending idea(s)")
+
+                # Show preview
+                with st.expander("📋 Preview Ideas", expanded=True):
+                    for idx, idea in enumerate(ideas, 1):
+                        st.markdown(f"**{idx}. {idea['topic']}** ({idea['goal']})")
+
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button(f"🚀 Process All {len(ideas)} Ideas", type="primary", use_container_width=True):
+                        st.info("🚧 Batch processing UI coming soon! Use `python main.py batch` for now.")
+
+                with col2:
+                    if st.button("⚙️ Select Specific Ideas", use_container_width=True):
+                        st.info("🚧 Selective processing coming soon!")
+
+        except Exception as e:
+            st.error(f"❌ Error fetching queue: {str(e)}")
 
     # Display results
     if st.session_state.results:
         st.markdown("---")
-        st.header("📄 Generated Content")
+        st.markdown("# 📄 Generated Content")
 
         result = st.session_state.results
 
-        # Tabs for different sections
-        tab1, tab2, tab3, tab4 = st.tabs(["🎯 Hooks", "✍️ Post", "🔬 Research", "🎨 Visual"])
+        # Quality score
+        quality_score = calculate_quality_score(result)
+        col1, col2, col3, col4 = st.columns(4)
+
+        with col1:
+            st.metric("Quality Score", f"{quality_score}/100",
+                     delta="Good" if quality_score >= 80 else "Needs work",
+                     delta_color="normal" if quality_score >= 80 else "inverse")
+
+        with col2:
+            char_count = len(result.get("post_body", ""))
+            st.metric("Characters", char_count,
+                     delta=f"{1500 - char_count} left",
+                     delta_color="normal" if char_count < 1500 else "inverse")
+
+        with col3:
+            hook_count = len(result.get("hooks", []))
+            st.metric("Hooks", hook_count, delta="Complete" if hook_count == 3 else "Missing")
+
+        with col4:
+            hashtag_count = len(result.get("hashtags", []))
+            st.metric("Hashtags", hashtag_count,
+                     delta="Optimal" if 3 <= hashtag_count <= 5 else "Adjust")
+
+        # Tabs
+        tab1, tab2, tab3, tab4, tab5 = st.tabs(["🎯 Hooks", "✍️ Post", "📊 Analytics", "🔬 Research", "🎨 Visual"])
 
         with tab1:
-            st.subheader("Hook Options")
-            st.write("Choose your favorite opening line:")
+            st.markdown("### Hook Options")
+            st.markdown("Choose your favorite opening line - each follows a proven formula:")
 
-            for i, hook in enumerate(result.get("hooks", []), 1):
-                with st.container():
-                    st.markdown(f"**Option {i}:**")
-                    st.info(hook)
-                    if st.button(f"Copy Hook {i}", key=f"copy_hook_{i}"):
-                        st.write("✅ Copied to clipboard")
+            hooks = result.get("hooks", [])
+            for i, hook in enumerate(hooks):
+                render_hook_card(hook, i)
 
         with tab2:
-            st.subheader("Post Body")
+            st.markdown("### Post Body")
 
-            # Character count
-            char_count = len(result.get("post_body", ""))
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric("Character Count", char_count)
-            with col2:
-                st.metric("Est. Read Time", "45-60 sec")
-            with col3:
-                status = "✅ Good" if char_count < 1500 else "⚠️ Too Long"
-                st.metric("Status", status)
-
-            st.markdown("**Full Post:**")
-            st.text_area(
-                "Post Content",
+            # Editor
+            post_body = st.text_area(
+                "Edit your post",
                 value=result.get("post_body", ""),
                 height=300,
-                key="post_body"
+                help="Edit the post content directly. Changes are not saved automatically."
             )
 
-            st.markdown("**Call-to-Action:**")
-            st.info(result.get("cta", ""))
+            # Character counter
+            char_count = len(post_body)
+            if char_count > 1500:
+                st.error(f"⚠️ Post is {char_count - 1500} characters over LinkedIn's limit!")
+            elif char_count > 1300:
+                st.warning(f"⚠️ Post is approaching the limit ({char_count}/1500)")
+            else:
+                st.success(f"✅ {char_count}/1500 characters ({1500 - char_count} remaining)")
 
-            st.markdown("**Hashtags:**")
-            hashtags = " ".join(result.get("hashtags", []))
-            st.code(hashtags)
+            st.markdown("---")
+
+            # CTA and Hashtags
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.markdown("**Call-to-Action:**")
+                st.info(result.get("cta", ""))
+
+            with col2:
+                st.markdown("**Hashtags:**")
+                hashtags = " ".join(result.get("hashtags", []))
+                st.code(hashtags)
+
+            st.markdown("---")
+
+            # LinkedIn Preview
+            st.markdown("### 📱 LinkedIn Preview")
+            render_linkedin_preview(post_body, hooks)
+
+            # Copy complete post
+            complete_post = f"{hooks[0] if hooks else ''}\n\n{post_body}\n\n{result.get('cta', '')}\n\n{hashtags}"
+
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("📋 Copy Complete Post", use_container_width=True):
+                    try:
+                        pyperclip.copy(complete_post)
+                        st.success("✅ Copied to clipboard!")
+                    except:
+                        st.code(complete_post)
+                        st.info("👆 Copy the text above manually")
+
+            with col2:
+                st.download_button(
+                    label="📥 Download as TXT",
+                    data=complete_post,
+                    file_name=f"linkedin_post_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
+                    mime="text/plain",
+                    use_container_width=True
+                )
 
         with tab3:
-            st.subheader("Research Brief")
-            st.markdown(result.get("research_brief", "No research available"))
+            st.markdown("### Analytics & Metrics")
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                # Character gauge
+                st.plotly_chart(create_character_gauge(char_count), use_container_width=True)
+
+            with col2:
+                st.markdown("#### Content Breakdown")
+
+                # Line breaks
+                line_breaks = post_body.count('\n\n')
+                st.metric("Line Breaks", line_breaks,
+                         delta="Good" if line_breaks >= 4 else "Add more",
+                         delta_color="normal" if line_breaks >= 4 else "inverse")
+
+                # Word count
+                word_count = len(post_body.split())
+                st.metric("Word Count", word_count)
+
+                # Sentences
+                sentence_count = post_body.count('.') + post_body.count('!') + post_body.count('?')
+                st.metric("Sentences", sentence_count)
+
+                # Avg words per sentence
+                avg_words = round(word_count / sentence_count if sentence_count > 0 else 0, 1)
+                st.metric("Avg Words/Sentence", avg_words,
+                         delta="Good" if avg_words < 20 else "Too long",
+                         delta_color="normal" if avg_words < 20 else "inverse")
+
+            # Quality suggestions
+            st.markdown("---")
+            st.markdown("#### 💡 Quality Suggestions")
+
+            suggestions = []
+            if char_count < 800:
+                suggestions.append("📝 Consider expanding your post to 800-1300 characters for optimal engagement")
+            if line_breaks < 4:
+                suggestions.append("↩️ Add more line breaks (aim for 4-6) for mobile readability")
+            if hashtag_count < 3:
+                suggestions.append("🏷️ Add more hashtags (aim for 3-5) to increase discoverability")
+            if avg_words > 20:
+                suggestions.append("✂️ Shorten sentences for better readability (aim for < 20 words per sentence)")
+
+            if suggestions:
+                for s in suggestions:
+                    st.warning(s)
+            else:
+                st.success("🎉 Your post looks great! No major issues detected.")
 
         with tab4:
-            st.subheader("Visual Asset Suggestion")
-            st.write(f"**Format:** {result.get('visual_format', 'N/A')}")
-            st.write(f"**Suggestion:** {result.get('visual_suggestion', 'N/A')}")
+            st.markdown("### Research Brief")
+            research = result.get("research_brief", "No research available")
 
-        # Download button
-        st.markdown("---")
+            # Try to parse as JSON if it looks like JSON
+            if research.strip().startswith('{'):
+                try:
+                    research_json = json.loads(research)
 
-        # Format complete post
-        complete_post = f"""HOOK OPTIONS:
-1. {result.get("hooks", [""])[0]}
-2. {result.get("hooks", ["", ""])[1]}
-3. {result.get("hooks", ["", "", ""])[2]}
+                    # Display structured research
+                    if "key_insights" in research_json:
+                        st.markdown("#### 🔑 Key Insights")
+                        for insight in research_json["key_insights"]:
+                            st.markdown(f"- {insight}")
 
-POST BODY:
-{result.get("post_body", "")}
+                    if "statistics" in research_json:
+                        st.markdown("#### 📊 Statistics")
+                        for stat in research_json["statistics"]:
+                            st.info(f"**{stat.get('stat')}**  \nSource: {stat.get('source')}")
 
-{result.get("cta", "")}
+                    if "contrarian_angles" in research_json:
+                        st.markdown("#### 💡 Contrarian Angles")
+                        for angle in research_json["contrarian_angles"]:
+                            st.markdown(f"- {angle}")
 
-{" ".join(result.get("hashtags", []))}
-"""
+                except json.JSONDecodeError:
+                    st.markdown(research)
+            else:
+                st.markdown(research)
 
-        st.download_button(
-            label="📥 Download Complete Post",
-            data=complete_post,
-            file_name=f"linkedin_post_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
-            mime="text/plain"
-        )
+        with tab5:
+            st.markdown("### Visual Asset Suggestion")
+
+            visual_format = result.get('visual_format', 'N/A')
+            visual_suggestion = result.get('visual_suggestion', 'N/A')
+
+            st.markdown(f"**Recommended Format:** `{visual_format}`")
+            st.markdown(visual_suggestion)
+
+            st.markdown("---")
+            st.info("🚧 Visual generation coming soon! For now, use this suggestion to create your asset manually.")
+
+        # History section
+        if len(st.session_state.history) > 1:
+            st.markdown("---")
+            with st.expander(f"📜 Session History ({len(st.session_state.history)} posts)"):
+                for idx, item in enumerate(reversed(st.session_state.history), 1):
+                    st.markdown(f"**{idx}. {item['topic']}** ({item['goal']}) - {item['timestamp'].strftime('%H:%M:%S')}")
 
 
 if __name__ == "__main__":

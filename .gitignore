@@ -56,3 +56,6 @@ venv.bak/
 *.tmp
 temp/
 tmp/
+
+# State tracking
+.last_processed

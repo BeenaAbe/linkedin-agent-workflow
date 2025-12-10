@@ -1,0 +1,145 @@
+Why You Need Evals
+Your workflow has two critical agents that need validation:
+Research Agent - Are insights relevant and citations accurate?
+Writer Agent - Does output follow LinkedIn best practices and match goal type?
+Without evals, you won't know if:
+Prompts are degrading over time
+Few-shot examples are helping
+Quality checks are catching real issues
+Different models perform better for specific tasks
+Evaluation Strategy: 3-Tier Approach
+Tier 1: Automated Unit Tests (Fast, run on every change)
+What to test:
+✅ Structural validation: Does output match expected JSON schema?
+✅ Length constraints: Post body 200-1,500 chars, 3 hooks present
+✅ Format rules: Line breaks every 2-3 lines, 3-5 hashtags
+✅ URL validation: Research citations are real URLs from Tavily (you already have this!)
+✅ Platform compliance: No external links in body, no banned jargon
+Example checks:
+def test_writer_output_structure():
+    assert len(output['hooks']) == 3
+    assert 200 <= len(output['post_body']) <= 1500
+    assert 3 <= len(output['hashtags']) <= 5
+    assert output['visual_format'] in ['carousel', 'video', 'photo', 'poll', 'text-only']
+Tier 2: LLM-as-Judge Evals (Medium speed, run weekly)
+What to test:
+✅ Hook effectiveness: Does each hook match its formula (controversial/question/story)?
+✅ Goal alignment: Does CTA/visual match the goal type (Thought Leadership vs Product)?
+✅ Writing quality: Active voice, no jargon, mobile-friendly formatting
+✅ Research relevance: Do insights actually relate to the topic?
+✅ Contrarian angle: Is there a unique/provocative perspective?
+Implementation:
+# Use Claude to grade outputs on 1-5 scale
+judge_prompt = """
+Rate this LinkedIn hook on:
+1. Controversy level (1-5)
+2. Clarity (1-5)
+3. Relevance to topic (1-5)
+
+Hook: {hook}
+Topic: {topic}
+"""
+Tier 3: Human Evaluation (Slow, run monthly)
+What to test:
+✅ Real engagement: Track actual LinkedIn performance (likes/comments/shares)
+✅ Brand voice: Does it sound like you?
+✅ Factual accuracy: Are statistics correct and recent?
+✅ Originality: Is it rehashing common takes or bringing fresh insights?
+Recommended Implementation Plan
+Phase 1: Golden Dataset (Week 1)
+Create 10-20 test cases covering:
+All 6 goal types (Thought Leadership, Product, Educational, Personal Brand, Interactive, Inspirational)
+Edge cases (controversial topics, technical subjects, personal stories)
+Known good outputs (your best past posts) as reference
+Structure:
+golden_dataset = [
+    {
+        "input": {
+            "topic": "Why most AI agents are just fancy chatbots",
+            "goal": "Thought Leadership",
+            "context": "Lead with 83% Gartner stat"
+        },
+        "expected_output": {
+            "has_controversial_hook": True,
+            "min_char_count": 800,
+            "requires_statistics": True,
+            "visual_format": "carousel"
+        }
+    }
+]
+Phase 2: Automated Test Suite (Week 2)
+Create tests/test_agents.py:
+Structural validation tests
+Platform compliance checks
+Regression tests (does old input still work?)
+Run via pytest before every deploy.
+Phase 3: LLM Judge Framework (Week 3)
+Create evals/llm_judge.py:
+Use Claude as grader for subjective quality
+Score on 5-10 criteria per agent
+Track scores over time in a CSV/database
+Run weekly or when changing prompts.
+Phase 4: Performance Tracking (Week 4+)
+Add to Notion:
+New columns: Actual Likes, Actual Comments, Actual Shares
+Track 2-3 weeks after posting
+Correlate with hook types, topics, visual formats
+Use this as feedback for prompt tuning.
+Key Metrics to Track
+Research Agent:
+Citation accuracy: % of URLs that are valid from Tavily
+Source quality: % Tier 1 sources (academic/industry reports)
+Insight relevance: LLM judge score 1-5
+Recency: % of sources from last 6 months
+Stat count: # of actionable statistics per brief
+Writer Agent:
+Compliance rate: % of posts passing all platform rules
+Hook diversity: Distribution across controversial/question/story
+Character count distribution: Avg length by goal type
+CTA alignment: % where CTA matches goal (LLM judge)
+Formatting score: Line breaks, bullets, emoji usage
+End-to-End:
+Success rate: % of runs completing without errors
+Quality check loop count: Avg # of regenerations needed
+Execution time: Research + writing duration
+Real engagement: LinkedIn likes/comments (lag by 1-2 weeks)
+Tools & Frameworks
+Option 1: LangSmith (Recommended)
+Built-in eval framework for LangChain/LangGraph
+Tracks traces, datasets, and scores automatically
+Supports LLM judges and custom scoring
+Option 2: Braintrust
+Open-source eval platform
+Good for comparing prompt versions side-by-side
+Strong visualizations
+Option 3: Custom (Simplest to start)
+Store outputs in evals/outputs/{timestamp}.json
+Run pytest for structural tests
+Manual review of 5-10 samples weekly
+What I'll Build for You
+I can create:
+tests/test_agents.py - Automated structural validation
+evals/llm_judge.py - Claude-as-judge for quality scoring
+evals/golden_dataset.json - 10 test cases covering all goal types
+evals/run_evals.py - Script to run full eval suite and generate report
+evals/performance_tracker.py - Track real LinkedIn metrics over time
+This will give you:
+✅ Confidence that prompt changes don't break things
+✅ Quantitative data on what works
+✅ Ability to experiment with different models/temperatures
+✅ Evidence to justify the automation to stakeholders
+Claude’s Plan
+I'll create a comprehensive evaluation framework for your LinkedIn agent workflow:
+Files to Create:
+tests/test_agents.py - Automated unit tests for structure, compliance, formatting
+evals/llm_judge.py - LLM-as-judge framework for quality scoring (hook effectiveness, goal alignment, writing quality)
+evals/golden_dataset.json - 10-15 test cases covering all 6 goal types with expected outputs
+evals/run_evals.py - Main script to execute full eval suite and generate reports
+evals/performance_tracker.py - Track real LinkedIn engagement metrics over time
+evals/README.md - Documentation on running evals and interpreting results
+Key Metrics Tracked:
+Research Agent: Citation accuracy, source quality, insight relevance, recency
+Writer Agent: Platform compliance, hook diversity, formatting, CTA alignment
+End-to-End: Success rate, execution time, quality loop count, real engagement
+This will give you automated regression testing, quality monitoring, and data-driven prompt optimization.
+Stayed in plan mode

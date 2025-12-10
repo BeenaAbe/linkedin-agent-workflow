@@ -60,6 +60,166 @@ Example: "What if your best feature is the reason users are leaving?"
 "I [made a mistake/discovered something] that [surprising outcome]."
 Example: "I spent $50k on a feature no one used. Here's what I learned."
 
+## Few-Shot Examples by Goal Type
+
+Study these high-performing examples before writing. Match the style, structure, and energy level of the goal type:
+
+### THOUGHT LEADERSHIP Example
+Hook: "Unpopular opinion: Your roadmap is killing your product."
+
+Most PMs treat roadmaps like religious texts.
+
+Every quarter, they lock features into a timeline. Then they wonder why shipping feels like pushing a boulder uphill.
+
+Here's what I learned after 8 years of building products:
+
+Roadmaps create false certainty. They assume you know what users want 6 months from now.
+
+But the best products emerge from:
+• Weekly user interviews
+• Rapid experimentation
+• Killing features that don't work
+
+Your job isn't to follow the plan.
+
+It's to find the truth faster than your competitors.
+
+What's your take? Disagree? Comment below.
+
+#ProductManagement #ProductStrategy #Agile #ProductThinking
+
+### EDUCATIONAL Example
+Hook: "What if I told you 90% of A/B tests fail because of one mistake?"
+
+You're testing the wrong thing.
+
+Most teams test button colors and headlines. They optimize for clicks.
+
+But high-performing teams test hypotheses about user behavior.
+
+Here's the framework I use:
+
+**Bad Test:**
+"Will a green button increase signups?"
+
+**Good Test:**
+"If users see social proof above the fold, will perceived trust increase enough to boost signups by 15%?"
+
+The difference?
+
+One optimizes pixels. The other tests psychology.
+
+Before your next A/B test, ask:
+• What user behavior am I trying to change?
+• What's my hypothesis about why they behave this way?
+• What metric proves I'm right?
+
+Which tip will you try first? Let me know below.
+
+#ABTesting #GrowthMarketing #ProductManagement #ConversionOptimization
+
+### PRODUCT Example
+Hook: "I spent 6 months building a feature no one asked for. It became our most-used product."
+
+In 2019, Notion didn't have databases.
+
+Users were begging for integrations, mobile apps, and faster load times.
+
+Instead, we built a relational database inside a document editor.
+
+The team thought we were crazy.
+
+But here's what we knew:
+
+Power users weren't leaving because of bugs. They were leaving because they hit a complexity ceiling.
+
+They needed a tool that could scale with their ambitions.
+
+We ignored the feature requests.
+
+We solved the deeper problem.
+
+Today, databases power 60% of Notion workspaces.
+
+I built a free framework on how we prioritize features that users don't ask for.
+
+Link in comments for the full breakdown.
+
+#ProductManagement #ProductStrategy #Notion #FeaturePrioritization
+
+### INTERACTIVE Example
+Hook: "Quick poll: What's the biggest reason you skip 1-on-1s with your manager?"
+
+I've noticed a pattern in the last 10 companies I've worked with.
+
+1-on-1s get canceled. Not by managers. By ICs.
+
+When I ask why, the answer is always the same:
+
+"They're not valuable."
+
+So here's my question to you:
+
+What makes a 1-on-1 feel like a waste of time?
+
+Vote in the poll 👇
+
+#Leadership #Management #CareerDevelopment #WorkplaceCulture
+
+### PERSONAL BRAND Example
+Hook: "I got fired from my first PM role. Best thing that ever happened to me."
+
+My manager called me into his office on a Tuesday.
+
+"You're not a good fit. Today is your last day."
+
+I was 26. I thought my career was over.
+
+But here's what actually happened:
+
+Getting fired forced me to ask a question I'd been avoiding:
+
+"What do I actually want to build?"
+
+At my old job, I was executing someone else's vision. I was a feature factory.
+
+After I got fired, I spent 3 months talking to users. Not building. Just listening.
+
+That's when I realized:
+
+The best PMs aren't order-takers. They're problem-finders.
+
+Six months later, I joined a startup. We grew from 10 to 500 users in 90 days.
+
+Not because I was smarter. Because I finally understood what mattered.
+
+Has this happened to you? Drop your story below.
+
+#CareerGrowth #ProductManagement #FounderLife #StartupLife
+
+### INSPIRATIONAL Example
+Hook: "The best career advice I ever got was only 7 words long."
+
+My first CEO told me this after I shipped a feature that flopped:
+
+"Fall in love with the problem, not your solution."
+
+I had spent 3 months building the wrong thing.
+
+I was so attached to my idea that I ignored every signal telling me to pivot.
+
+That sentence changed how I work:
+
+Now, I spend 80% of my time understanding the problem. And 20% building the solution.
+
+Because the teams that win aren't the ones who build the fastest.
+
+They're the ones who understand the deepest.
+
+Tag someone who needs to hear this today.
+
+#CareerAdvice #ProductManagement #ProblemSolving #Leadership
+
 ## CTA (Call-to-Action) by Goal
 
 Match the CTA to the post's Goal:
