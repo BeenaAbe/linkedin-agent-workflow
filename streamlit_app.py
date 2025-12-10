@@ -533,9 +533,9 @@ def main():
         # Mode selection
         mode = st.radio(
             "Mode",
-            ["manual", "notion", "batch"],
-            format_func=lambda x: "✍️ Manual Input" if x == "manual" else "📋 Notion Queue" if x == "notion" else "🔥 Batch Process",
-            help="Manual: Test with custom input\nNotion: Pull from database\nBatch: Process multiple ideas"
+            ["manual", "notion"],
+            format_func=lambda x: "✍️ Manual Input" if x == "manual" else "📋 Notion Queue",
+            help="Manual: Test with custom input & optionally save to Notion\nNotion: Select and process ideas from database (single or batch)"
         )
 
         st.markdown("---")
@@ -596,6 +596,13 @@ def main():
             height=100
         )
 
+        # Save to Notion checkbox
+        save_to_notion = st.checkbox(
+            "💾 Save to Notion after generation",
+            value=False,
+            help="Automatically create a new page in your Notion database with the generated content"
+        )
+
         col1, col2, col3 = st.columns([2, 1, 1])
         with col1:
             generate_btn = st.button("🚀 Generate Post", type="primary", disabled=st.session_state.workflow_running, use_container_width=True)
@@ -603,8 +610,22 @@ def main():
             if st.button("🎲 Random Example", use_container_width=True):
                 st.info("🚧 Coming soon!")
         with col3:
-            if st.button("💾 Save Draft", use_container_width=True):
-                st.info("🚧 Coming soon!")
+            if st.session_state.results and st.button("💾 Save to Notion Now", use_container_width=True):
+                try:
+                    with st.spinner("Saving to Notion..."):
+                        notion = NotionClient()
+                        result = st.session_state.results
+                        page_id = notion.create_new_page_with_draft(
+                            topic=result.get("topic", topic),
+                            goal=result.get("goal", goal),
+                            context=result.get("context", context),
+                            draft_data=result
+                        )
+                        st.success(f"✅ Saved to Notion! Page ID: {page_id[:8]}...")
+                        add_log(f"Saved manual post to Notion: {topic}", "success")
+                except Exception as e:
+                    st.error(f"❌ Error saving to Notion: {str(e)}")
+                    add_log(f"Error saving to Notion: {str(e)}", "error")
 
         if generate_btn:
             if not topic:
@@ -627,6 +648,23 @@ def main():
                     with st.spinner("🔮 Generating your LinkedIn post..."):
                         result = run_workflow(input_data, workflow_type)
 
+                        # Save to Notion if checkbox is checked
+                        if save_to_notion:
+                            try:
+                                with st.spinner("💾 Saving to Notion..."):
+                                    notion = NotionClient()
+                                    page_id = notion.create_new_page_with_draft(
+                                        topic=topic,
+                                        goal=goal,
+                                        context=context,
+                                        draft_data=result
+                                    )
+                                    add_log(f"✅ Saved to Notion! Page ID: {page_id[:8]}...", "success")
+                                    st.success(f"✅ Post generated AND saved to Notion!")
+                            except Exception as e:
+                                st.warning(f"⚠️ Post generated but failed to save to Notion: {str(e)}")
+                                add_log(f"Error saving to Notion: {str(e)}", "error")
+
                         # Add to history
                         st.session_state.history.append({
                             "timestamp": datetime.now(),
@@ -644,109 +682,151 @@ def main():
                     st.session_state.workflow_running = False
 
     elif mode == "notion":
-        st.markdown("## 📋 Notion Integration Mode")
-        st.markdown("Process ideas directly from your Notion content database")
+        st.markdown("## 📋 Notion Queue")
+        st.markdown("Select ideas from your database and process them (single or batch)")
 
-        col1, col2 = st.columns([2, 1])
+        # Initialize selected_ideas in session state
+        if 'selected_ideas' not in st.session_state:
+            st.session_state.selected_ideas = []
 
-        with col1:
-            st.info("💡 This will fetch and process the next entry with Status = 'Idea' from your Notion database")
+        # Fetch ideas once
+        try:
+            notion = NotionClient()
+            all_ideas = notion.get_all_pending_ideas()
 
-        with col2:
-            if st.button("🔍 Fetch & Process Next", type="primary", disabled=st.session_state.workflow_running, use_container_width=True):
-                st.session_state.workflow_running = True
-                st.session_state.results = None
+            if not all_ideas:
+                st.info("📭 No pending ideas found in Notion. Add ideas with Status = 'Idea' to your database.")
+            else:
+                st.success(f"✨ Found {len(all_ideas)} pending idea(s)")
 
-                try:
-                    with st.spinner("📥 Fetching from Notion..."):
-                        notion = NotionClient()
-                        idea = notion.get_next_idea()
+                # Select All / Deselect All buttons
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    if st.button("☑️ Select All", use_container_width=True):
+                        st.session_state.selected_ideas = [idea['page_id'] for idea in all_ideas]
+                        st.rerun()
+                with col2:
+                    if st.button("⬜ Deselect All", use_container_width=True):
+                        st.session_state.selected_ideas = []
+                        st.rerun()
+                with col3:
+                    st.metric("Selected", len(st.session_state.selected_ideas))
 
-                        if not idea:
-                            st.warning("📭 No ideas found with Status = 'Idea'")
-                            add_log("No ideas found in Notion", "info")
-                            st.session_state.workflow_running = False
-                        else:
-                            add_log(f"Found idea: {idea['topic']}", "success")
+                st.markdown("---")
 
-                            # Update status
-                            notion.update_status(idea["page_id"], "Researching")
+                # Display ideas with checkboxes
+                st.markdown("### ✅ Select Ideas to Process")
+                st.info("💡 Tip: Select one for single processing or multiple for batch processing")
 
-                            # Run workflow
-                            result = run_workflow(idea, workflow_type)
+                for idx, idea in enumerate(all_ideas):
+                    col1, col2 = st.columns([1, 20])
 
-                            # Update Notion
-                            add_log("📤 Updating Notion with results...", "info")
-                            notion.update_with_research(result["page_id"], result["research_brief"])
-                            notion.update_with_draft(result["page_id"], result)
+                    with col1:
+                        is_selected = st.checkbox(
+                            "",
+                            value=idea['page_id'] in st.session_state.selected_ideas,
+                            key=f"cb_{idea['page_id']}",
+                            label_visibility="collapsed"
+                        )
 
-                            # Slack notification
-                            if os.getenv("SLACK_WEBHOOK_URL"):
-                                slack = SlackNotifier()
-                                slack.send_draft_notification(result)
+                        # Update selection state
+                        if is_selected and idea['page_id'] not in st.session_state.selected_ideas:
+                            st.session_state.selected_ideas.append(idea['page_id'])
+                        elif not is_selected and idea['page_id'] in st.session_state.selected_ideas:
+                            st.session_state.selected_ideas.remove(idea['page_id'])
 
-                            st.session_state.results = result
-                            st.session_state.workflow_running = False
-                            st.rerun()
-
-                except Exception as e:
-                    st.error(f"❌ Error: {str(e)}")
-                    add_log(f"Error: {str(e)}", "error")
-                    st.session_state.workflow_running = False
-
-        # Queue preview
-        st.markdown("---")
-        with st.expander("📊 View Queue Status", expanded=True):
-            try:
-                notion = NotionClient()
-                ideas = notion.get_all_pending_ideas()
-
-                if ideas:
-                    st.success(f"✨ {len(ideas)} idea(s) in queue")
-                    for idx, idea in enumerate(ideas[:5], 1):
+                    with col2:
+                        # Style based on selection
+                        card_style = "border: 3px solid #0077B5; background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);" if is_selected else ""
                         st.markdown(f"""
-                        <div class="queue-card">
-                            <strong>{idx}. {idea['topic']}</strong><br>
+                        <div class="queue-card" style="{card_style}">
+                            <strong>{idx + 1}. {idea['topic']}</strong><br>
                             <small>🎯 Goal: {idea['goal']}</small>
+                            {f"<br><small>📝 {idea.get('context', '')[:100]}...</small>" if idea.get('context') else ''}
                         </div>
                         """, unsafe_allow_html=True)
 
-                    if len(ideas) > 5:
-                        st.info(f"➕ {len(ideas) - 5} more ideas in queue")
+                # Process selected button
+                if st.session_state.selected_ideas:
+                    st.markdown("---")
+                    num_selected = len(st.session_state.selected_ideas)
+
+                    col1, col2 = st.columns([3, 1])
+
+                    with col1:
+                        button_text = f"🚀 Process {num_selected} Idea{'s' if num_selected > 1 else ''}"
+                        if st.button(
+                            button_text,
+                            type="primary",
+                            disabled=st.session_state.workflow_running,
+                            use_container_width=True
+                        ):
+                            st.session_state.workflow_running = True
+
+                            # Get selected ideas
+                            selected_ideas_data = [idea for idea in all_ideas if idea['page_id'] in st.session_state.selected_ideas]
+
+                            # Process each selected idea
+                            progress_bar = st.progress(0)
+                            status_text = st.empty()
+                            results_list = []
+
+                            for idx, idea in enumerate(selected_ideas_data, 1):
+                                try:
+                                    status_text.markdown(f"**Processing {idx}/{len(selected_ideas_data)}: {idea['topic']}**")
+                                    progress_bar.progress(idx / len(selected_ideas_data))
+
+                                    add_log(f"Processing {idx}/{len(selected_ideas_data)}: {idea['topic']}", "info")
+
+                                    # Update status
+                                    notion.update_status(idea["page_id"], "Researching")
+
+                                    # Run workflow
+                                    result = run_workflow(idea, workflow_type)
+
+                                    # Update Notion
+                                    notion.update_with_research(result["page_id"], result["research_brief"])
+                                    notion.update_with_draft(result["page_id"], result)
+
+                                    # Slack notification
+                                    if os.getenv("SLACK_WEBHOOK_URL"):
+                                        slack = SlackNotifier()
+                                        slack.send_draft_notification(result)
+
+                                    results_list.append(result)
+                                    add_log(f"✅ Completed: {idea['topic']}", "success")
+
+                                except Exception as e:
+                                    st.error(f"❌ Error processing {idea['topic']}: {str(e)}")
+                                    add_log(f"Error: {str(e)}", "error")
+
+                            # Complete
+                            progress_bar.progress(1.0)
+                            status_text.markdown(f"**✅ Completed {len(results_list)}/{len(selected_ideas_data)} ideas**")
+
+                            st.success(f"🎉 Successfully processed {len(results_list)} idea(s)!")
+
+                            # Show last result
+                            if results_list:
+                                st.session_state.results = results_list[-1]
+
+                            # Clear selection
+                            st.session_state.selected_ideas = []
+                            st.session_state.workflow_running = False
+
+                            time.sleep(2)
+                            st.rerun()
+
+                    with col2:
+                        if st.button("🗑️ Clear Selection", use_container_width=True):
+                            st.session_state.selected_ideas = []
+                            st.rerun()
+
                 else:
-                    st.info("📭 Queue is empty - add ideas to your Notion database!")
-            except Exception as e:
-                st.error(f"Could not fetch queue: {str(e)}")
-
-    else:  # batch mode
-        st.markdown("## 🔥 Batch Processing Mode")
-        st.markdown("Process multiple ideas from Notion in one go")
-
-        try:
-            notion = NotionClient()
-            ideas = notion.get_all_pending_ideas()
-
-            if not ideas:
-                st.info("📭 No pending ideas found in Notion")
-            else:
-                st.success(f"✨ Found {len(ideas)} pending idea(s)")
-
-                # Show preview
-                with st.expander("📋 Preview Ideas", expanded=True):
-                    for idx, idea in enumerate(ideas, 1):
-                        st.markdown(f"**{idx}. {idea['topic']}** ({idea['goal']})")
-
-                col1, col2 = st.columns(2)
-                with col1:
-                    if st.button(f"🚀 Process All {len(ideas)} Ideas", type="primary", use_container_width=True):
-                        st.info("🚧 Batch processing UI coming soon! Use `python main.py batch` for now.")
-
-                with col2:
-                    if st.button("⚙️ Select Specific Ideas", use_container_width=True):
-                        st.info("🚧 Selective processing coming soon!")
+                    st.info("👆 Select at least one idea to process")
 
         except Exception as e:
-            st.error(f"❌ Error fetching queue: {str(e)}")
+            st.error(f"❌ Error fetching Notion queue: {str(e)}")
 
     # Display results
     if st.session_state.results:

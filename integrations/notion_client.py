@@ -157,6 +157,66 @@ class NotionClient:
             return ""
         return prop["select"]["name"] if prop["select"] else ""
 
+    def create_new_page_with_draft(self, topic: str, goal: str, context: str, draft_data: Dict[str, Any]) -> str:
+        """Create a new page in Notion with generated content"""
+        try:
+            # Build properties
+            properties = {
+                "Name": {
+                    "title": [{"text": {"content": topic}}]
+                },
+                "Goal": {
+                    "select": {"name": goal}
+                },
+                "Status": {
+                    "status": {"name": "Ready"}
+                },
+                "Context/Notes": {
+                    "rich_text": [{"text": {"content": context[:2000]}}] if context else {"rich_text": []}
+                },
+                "Research Brief": {
+                    "rich_text": [{"text": {"content": draft_data.get("research_brief", "")[:2000]}}]
+                },
+                "Hook Option 1": {
+                    "rich_text": [{"text": {"content": draft_data["hooks"][0][:2000]}}] if len(draft_data.get("hooks", [])) > 0 else {"rich_text": []}
+                },
+                "Hook Option 2": {
+                    "rich_text": [{"text": {"content": draft_data["hooks"][1][:2000]}}] if len(draft_data.get("hooks", [])) > 1 else {"rich_text": []}
+                },
+                "Hook Option 3": {
+                    "rich_text": [{"text": {"content": draft_data["hooks"][2][:2000]}}] if len(draft_data.get("hooks", [])) > 2 else {"rich_text": []}
+                },
+                "Draft Body": {
+                    "rich_text": [{"text": {"content": draft_data.get("post_body", "")[:2000]}}]
+                },
+                "CTA": {
+                    "rich_text": [{"text": {"content": draft_data.get("cta", "")[:2000]}}]
+                },
+                "Hashtags": {
+                    "rich_text": [{"text": {"content": " ".join(draft_data.get("hashtags", []))}}]
+                },
+                "Image Suggestion": {
+                    "rich_text": [{"text": {"content": draft_data.get("visual_suggestion", "")[:2000]}}]
+                },
+                "Format Type": {
+                    "select": {"name": draft_data.get("visual_format", "text")}
+                }
+            }
+
+            # Create the page
+            response = self.client.pages.create(
+                parent={"database_id": self.database_id},
+                properties=properties
+            )
+
+            page_id = response["id"]
+            print(f"✅ Created new Notion page with ID: {page_id}")
+            return page_id
+
+        except Exception as e:
+            print(f"❌ Error creating Notion page: {e}")
+            raise
+
     # Timestamp tracking methods
     def get_last_processed_time(self) -> Optional[str]:
         """Get the timestamp of the last processed item"""
