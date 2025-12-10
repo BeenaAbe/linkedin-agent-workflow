@@ -304,17 +304,28 @@ Before submitting:
 ## Important Notes
 
 1. **Research Integration**: Use specific stats and quotes from research (don't invent data)
-2. **Mobile-First**: 70% of users are on mobile—line breaks are critical
-3. **Algorithm Optimization**: Carousels and videos get 3x more dwell time
-4. **Authenticity**: Avoid "guru speak" or performative vulnerability"""),
+2. **Context Integration**: If user provided rough notes, links, or ideas in context - incorporate them naturally into the post
+3. **Mobile-First**: 70% of users are on mobile—line breaks are critical
+4. **Algorithm Optimization**: Carousels and videos get 3x more dwell time
+5. **Authenticity**: Avoid "guru speak" or performative vulnerability
+
+## Context Handling
+
+**If context contains:**
+- **Specific instructions** (e.g., "lead with 83% stat", "target PMs"): Follow these precisely
+- **Rough ideas** (e.g., "maybe mention X", "angle: Y vs Z"): Incorporate naturally if they fit
+- **Links/URLs**: The research agent already processed these - use the insights
+- **Target audience**: Adjust tone and examples accordingly
+
+**If NO context:** Proceed with standard post generation using research and goal type."""),
             ("user", """Topic: {topic}
 Goal: {goal}
-Context: {context}
+Context/Notes: {context}
 
 Research Brief:
 {research_brief}
 
-Generate a compelling LinkedIn post following all guidelines above. Use the research insights, statistics, and quotes from the research brief to create a data-backed post. Focus on the "{goal}" goal type for CTA and visual asset selection. Return only valid JSON.""")
+Generate a compelling LinkedIn post following all guidelines above. Use the research insights, statistics, and quotes from the research brief to create a data-backed post. If context contains specific instructions or rough notes, incorporate them naturally. Focus on the "{goal}" goal type for CTA and visual asset selection. Return only valid JSON.""")
         ])
 
     def write(self, state: Dict[str, Any]) -> Dict[str, Any]:

@@ -25,6 +25,18 @@ class ResearchAgent:
         self.synthesis_prompt = ChatPromptTemplate.from_messages([
             ("system", """You are a LinkedIn research assistant. Your job is to gather high-quality, relevant information for LinkedIn content.
 
+## Context Handling (IMPORTANT)
+
+**If user provides context with:**
+- **Links/URLs**: Prioritize these as primary sources. Extract key insights from them first, then supplement with web search.
+- **Rough notes/ideas**: Use these to guide research direction (e.g., "mention 83% stat", "target PMs", "contrarian angle").
+- **Specific requirements**: Follow them precisely (e.g., "lead with X", "include quote from Y").
+
+**If NO context provided:**
+- Proceed with standard research using topic and goal type
+- Conduct thorough web research to find best sources
+- Follow the research logic below
+
 ## Research Logic by Goal Type
 
 **Thought Leadership**: Establish authority through contrarian or data-backed insights
@@ -104,12 +116,18 @@ Return structured research as JSON:
 - If you reference a statistic, it MUST have a corresponding URL from the sources"""),
             ("user", """Topic: {topic}
 Goal: {goal}
-Context: {context}
+Context/Notes: {context}
 
 Search Results:
 {search_results}
 
-Analyze these results and provide a structured research brief following the JSON format. Focus on the research logic for the "{goal}" goal type. Include specific URLs and dates for all statistics.""")
+**Instructions:**
+1. If context contains URLs/links: Extract and summarize key points from those sources FIRST
+2. If context has rough notes (e.g., "mention X stat", "target Y audience"): Use these as research priorities
+3. If context is minimal or empty: Conduct standard research based on topic and goal
+4. Supplement with search results to create comprehensive brief
+
+Analyze and provide a structured research brief following the JSON format. Focus on the research logic for the "{goal}" goal type. Include specific URLs and dates for all statistics.""")
         ])
 
     def research(self, state: Dict[str, Any]) -> Dict[str, Any]:

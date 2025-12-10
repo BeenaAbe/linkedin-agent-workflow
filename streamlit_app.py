@@ -590,10 +590,16 @@ def main():
             )
 
         context = st.text_area(
-            "Context/Notes (Optional)",
-            placeholder="e.g., Lead with the 83% Gartner stat. Contrast chatbots vs real agents. Target PM audience.",
-            help="Additional context, specific stats to include, or special instructions",
-            height=100
+            "Context/Notes/Links (Optional)",
+            placeholder="""You can include:
+• Links to reference: https://example.com/article
+• Rough notes: "mention 83% Gartner stat, target PM audience"
+• Specific ideas: "lead with controversial take, compare X vs Y"
+• Any instructions or direction for the content
+
+Leave empty to let the AI research independently.""",
+            help="Add links, rough notes, ideas, or specific instructions. The AI will use whatever you provide as guidance. Works with minimal or detailed input!",
+            height=120
         )
 
         # Save to Notion checkbox
