@@ -329,21 +329,41 @@ Generate a compelling LinkedIn post following all guidelines above. Use the rese
         ])
 
     def write(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Generate LinkedIn post from research"""
+        """Generate LinkedIn post from research and strategy"""
 
         topic = state["topic"]
         goal = state["goal"]
         context = state.get("context", "")
         research_brief = state.get("research_brief", "")
+        content_strategy = state.get("content_strategy", {})
+        editor_feedback = state.get("editor_feedback", "")
+        revision_count = state.get("revision_count", 0)
 
-        print(f"✍️  Writing post for: {topic}")
+        if revision_count > 0:
+            print(f"✍️  Writer: Revising post (attempt {revision_count + 1})...")
+            print(f"   Feedback: {editor_feedback[:100]}...")
+        else:
+            print(f"✍️  Writer: Writing post for: {topic}")
+
+        # Build enhanced prompt with strategy
+        strategy_context = ""
+        if content_strategy:
+            strategy_context = f"\n\nContent Strategy:\n"
+            strategy_context += f"Chosen Angle: {content_strategy.get('chosen_angle', 'N/A')}\n"
+            strategy_context += f"Outline: {', '.join(content_strategy.get('outline', []))}\n"
+            strategy_context += f"Structure: {content_strategy.get('structure_type', 'N/A')}\n"
+
+        # Add editor feedback if this is a revision
+        feedback_context = ""
+        if revision_count > 0 and editor_feedback:
+            feedback_context = f"\n\nEditor Feedback (IMPORTANT - Address these issues):\n{editor_feedback}\n"
 
         # Generate post
         chain = self.writer_prompt | self.llm
         response = chain.invoke({
             "topic": topic,
             "goal": goal,
-            "context": context,
+            "context": context + strategy_context + feedback_context,
             "research_brief": research_brief[:1500]  # Limit length
         })
 

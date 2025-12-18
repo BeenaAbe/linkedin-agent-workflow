@@ -2,7 +2,7 @@
 
 import os
 from dotenv import load_dotenv
-from workflow import AdaptiveLinkedInWorkflow
+from workflow import EnhancedLinkedInWorkflow
 
 load_dotenv()
 
@@ -27,7 +27,7 @@ def test_full_workflow():
 
     try:
         # Run workflow
-        workflow = AdaptiveLinkedInWorkflow()
+        workflow = EnhancedLinkedInWorkflow()
         result = workflow.run(test_input)
 
         # Validate output
@@ -101,6 +101,34 @@ def test_full_workflow():
             checks.append(True)
         else:
             print(f"❌ No visual suggestion")
+            checks.append(False)
+
+        # Check 8: Quality score
+        quality_score = result.get("quality_score", 0)
+        if quality_score >= 70:
+            print(f"✅ Quality score: {quality_score}/100")
+            checks.append(True)
+        else:
+            print(f"⚠️  Quality score: {quality_score}/100 (target: 70+)")
+            checks.append(quality_score > 0)
+
+        # Check 9: Content strategy
+        strategy = result.get("content_strategy", {})
+        if strategy and strategy.get("chosen_angle"):
+            print(f"✅ Strategy: {strategy.get('chosen_angle', '')[:50]}...")
+            checks.append(True)
+        else:
+            print(f"❌ No content strategy")
+            checks.append(False)
+
+        # Check 10: Workflow metadata
+        workflow_id = result.get("workflow_id", "")
+        duration = result.get("duration_minutes", 0)
+        if workflow_id and duration > 0:
+            print(f"✅ Workflow ID: {workflow_id}, Duration: {duration}min")
+            checks.append(True)
+        else:
+            print(f"⚠️  Missing workflow metadata")
             checks.append(False)
 
         # Final score

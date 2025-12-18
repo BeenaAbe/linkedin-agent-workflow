@@ -8,7 +8,7 @@ import os
 import pyperclip
 import plotly.graph_objects as go
 from dotenv import load_dotenv
-from workflow import LinkedInWorkflow, AdaptiveLinkedInWorkflow
+from workflow import LinkedInWorkflow, AdaptiveLinkedInWorkflow, EnhancedLinkedInWorkflow
 from integrations.notion_client import NotionClient
 from integrations.slack_notifier import SlackNotifier
 import time
@@ -328,7 +328,13 @@ def get_hook_type(index):
 
 
 def calculate_quality_score(result):
-    """Calculate quality score based on best practices"""
+    """Calculate quality score - use Editor Agent's score if available, otherwise calculate"""
+
+    # Use Editor Agent's quality score if available (from Enhanced workflow)
+    if "quality_score" in result and result.get("quality_score", 0) > 0:
+        return result["quality_score"]
+
+    # Fallback: Calculate score based on best practices
     score = 100
     post_body = result.get("post_body", "")
     hooks = result.get("hooks", [])
@@ -445,7 +451,7 @@ def render_linkedin_preview(post_body, hooks):
     st.markdown(preview_html, unsafe_allow_html=True)
 
 
-def run_workflow(input_data, workflow_type="adaptive"):
+def run_workflow(input_data, workflow_type="enhanced"):
     """Run the workflow with progress tracking"""
     try:
         st.session_state.progress = []
@@ -453,7 +459,10 @@ def run_workflow(input_data, workflow_type="adaptive"):
         add_log(f"Starting workflow for: {input_data['topic']}", "info")
 
         # Select workflow type
-        if workflow_type == "adaptive":
+        if workflow_type == "enhanced":
+            workflow = EnhancedLinkedInWorkflow()
+            add_log("Using Enhanced 6-Agent Workflow (Admin → Research → Strategist → Writer → Editor → Formatter)", "info")
+        elif workflow_type == "adaptive":
             workflow = AdaptiveLinkedInWorkflow()
             add_log("Using Adaptive Workflow (with quality checks)", "info")
         else:
@@ -523,9 +532,9 @@ def main():
         # Workflow type selection
         workflow_type = st.radio(
             "Workflow Type",
-            ["adaptive", "simple"],
-            format_func=lambda x: "✨ Adaptive (Quality Checks)" if x == "adaptive" else "⚡ Simple Sequential",
-            help="Adaptive workflow includes self-correction and quality checks"
+            ["enhanced", "adaptive", "simple"],
+            format_func=lambda x: "🚀 Enhanced (6-Agent Pipeline)" if x == "enhanced" else "✨ Adaptive (Quality Checks)" if x == "adaptive" else "⚡ Simple Sequential",
+            help="Enhanced: Full 6-agent system with Admin, Strategist, Editor, Formatter\nAdaptive: Quality checks and self-correction\nSimple: Basic sequential workflow"
         )
 
         st.markdown("---")
@@ -865,8 +874,12 @@ Leave empty to let the AI research independently.""",
             st.metric("Hashtags", hashtag_count,
                      delta="Optimal" if 3 <= hashtag_count <= 5 else "Adjust")
 
-        # Tabs
-        tab1, tab2, tab3, tab4, tab5 = st.tabs(["🎯 Hooks", "✍️ Post", "📊 Analytics", "🔬 Research", "🎨 Visual"])
+        # Tabs (add new tab for Enhanced workflow info)
+        has_enhanced_data = result.get("content_strategy") or result.get("editor_feedback") or result.get("workflow_id")
+        if has_enhanced_data:
+            tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["🎯 Hooks", "✍️ Post", "📊 Analytics", "🔬 Research", "🎨 Visual", "🤖 Workflow"])
+        else:
+            tab1, tab2, tab3, tab4, tab5 = st.tabs(["🎯 Hooks", "✍️ Post", "📊 Analytics", "🔬 Research", "🎨 Visual"])
 
         with tab1:
             st.markdown("### Hook Options")
@@ -1029,8 +1042,182 @@ Leave empty to let the AI research independently.""",
             st.markdown(f"**Recommended Format:** `{visual_format}`")
             st.markdown(visual_suggestion)
 
+            # Display visual specs if available (from Formatter Agent)
+            visual_specs = result.get('visual_specs', {})
+            if visual_specs:
+                st.markdown("---")
+                st.markdown("#### 📐 Visual Specifications")
+
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.metric("Format", visual_specs.get('format', 'N/A'))
+                    st.metric("Aspect Ratio", visual_specs.get('aspect_ratio', 'N/A'))
+                with col2:
+                    if 'slides' in visual_specs:
+                        st.metric("Slides", visual_specs.get('slides', 'N/A'))
+                    if 'duration' in visual_specs:
+                        st.metric("Duration", visual_specs.get('duration', 'N/A'))
+
+                # Carousel outline
+                if 'carousel_outline' in visual_specs:
+                    st.markdown("**Carousel Outline:**")
+                    for slide in visual_specs['carousel_outline']:
+                        st.markdown(f"- {slide}")
+
+                # Generation prompt for AI tools
+                if 'generation_prompt' in visual_specs:
+                    st.markdown("**AI Generation Prompt:**")
+                    st.code(visual_specs['generation_prompt'], language="text")
+
             st.markdown("---")
             st.info("🚧 Visual generation coming soon! For now, use this suggestion to create your asset manually.")
+
+        # New Workflow tab (only for Enhanced workflow)
+        if has_enhanced_data:
+            with tab6:
+                st.markdown("### 🤖 Enhanced Workflow Details")
+
+                # Workflow metadata
+                if result.get("workflow_id"):
+                    st.markdown("#### 📋 Workflow Metadata")
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Workflow ID", result.get("workflow_id", "N/A"))
+                    with col2:
+                        st.metric("Duration", f"{result.get('duration_minutes', 0):.1f} min")
+                    with col3:
+                        st.metric("Revisions", result.get("revision_count", 0))
+
+                    st.markdown("---")
+
+                # Content Strategy (from Strategist Agent)
+                strategy = result.get("content_strategy", {})
+                if strategy:
+                    st.markdown("#### 🎯 Content Strategy")
+
+                    st.success(f"**Chosen Angle:** {strategy.get('chosen_angle', 'N/A')}")
+
+                    if strategy.get("outline"):
+                        st.markdown("**Outline:**")
+                        for i, section in enumerate(strategy.get("outline", []), 1):
+                            st.markdown(f"{i}. {section}")
+
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        if strategy.get("structure_type"):
+                            st.info(f"**Structure:** {strategy.get('structure_type').title()}")
+                        if strategy.get("target_length"):
+                            st.info(f"**Target Length:** {strategy.get('target_length')}")
+
+                    with col2:
+                        if strategy.get("hook_approach"):
+                            st.info(f"**Hook Approach:** {strategy.get('hook_approach').title()}")
+
+                    # Key points
+                    if strategy.get("key_points"):
+                        st.markdown("**Key Points:**")
+                        for point in strategy.get("key_points", []):
+                            st.markdown(f"- {point}")
+
+                    st.markdown("---")
+
+                # Editor Feedback
+                if result.get("editor_feedback"):
+                    st.markdown("#### 📝 Editor Feedback")
+
+                    quality_score = result.get("quality_score", 0)
+                    editor_decision = result.get("editor_decision", "unknown")
+
+                    col1, col2 = st.columns([1, 3])
+                    with col1:
+                        st.metric("Quality Score", f"{quality_score}/100")
+                        if editor_decision == "approve":
+                            st.success("✅ Approved")
+                        else:
+                            st.warning("🔄 Revised")
+
+                    with col2:
+                        st.markdown("**Feedback:**")
+                        st.text_area(
+                            "Editor's assessment",
+                            value=result.get("editor_feedback", ""),
+                            height=150,
+                            disabled=True,
+                            label_visibility="collapsed"
+                        )
+
+                    st.markdown("---")
+
+                # Pre-publish checklist (from Admin Agent)
+                if result.get("checklist"):
+                    st.markdown("#### ✅ Pre-Publish Checklist")
+
+                    checklist = result.get("checklist", {})
+                    passed = sum(checklist.values())
+                    total = len(checklist)
+
+                    st.progress(passed / total if total > 0 else 0)
+                    st.markdown(f"**{passed}/{total} checks passed** ({int(passed/total*100) if total > 0 else 0}%)")
+
+                    # Display checks
+                    col1, col2 = st.columns(2)
+                    items = list(checklist.items())
+                    mid = len(items) // 2
+
+                    with col1:
+                        for key, value in items[:mid]:
+                            if value:
+                                st.success(f"✅ {key.replace('_', ' ').title()}")
+                            else:
+                                st.error(f"❌ {key.replace('_', ' ').title()}")
+
+                    with col2:
+                        for key, value in items[mid:]:
+                            if value:
+                                st.success(f"✅ {key.replace('_', ' ').title()}")
+                            else:
+                                st.error(f"❌ {key.replace('_', ' ').title()}")
+
+                # Agent pipeline visualization
+                st.markdown("---")
+                st.markdown("#### 🔄 Agent Pipeline")
+
+                pipeline_html = """
+                <div style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 1.5rem; border-radius: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                        <div style="text-align: center; margin: 0.5rem;">
+                            <div style="background: #0077B5; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">🔍</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Admin</div>
+                        </div>
+                        <div style="color: #0077B5; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; margin: 0.5rem;">
+                            <div style="background: #00A0DC; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">📚</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Research</div>
+                        </div>
+                        <div style="color: #0077B5; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; margin: 0.5rem;">
+                            <div style="background: #0077B5; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">🎯</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Strategist</div>
+                        </div>
+                        <div style="color: #0077B5; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; margin: 0.5rem;">
+                            <div style="background: #00A0DC; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">✍️</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Writer</div>
+                        </div>
+                        <div style="color: #0077B5; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; margin: 0.5rem;">
+                            <div style="background: #0077B5; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">📝</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Editor</div>
+                        </div>
+                        <div style="color: #0077B5; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; margin: 0.5rem;">
+                            <div style="background: #00A0DC; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">✨</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Formatter</div>
+                        </div>
+                    </div>
+                </div>
+                """
+                st.markdown(pipeline_html, unsafe_allow_html=True)
 
         # History section
         if len(st.session_state.history) > 1:
