@@ -46,9 +46,9 @@ st.markdown("""
         letter-spacing: -0.01em;
     }
 
-    /* Main app background - coral/peachy gradient (Monolitt-inspired) */
+    /* Main app background - coral to black gradient */
     .stApp {
-        background: linear-gradient(180deg, #ffb5a7 0%, #ffa8a5 30%, #ff9bb5 60%, #ff8fc5 100%) !important;
+        background: linear-gradient(180deg, #e07856 0%, #d06850 25%, #a05048 50%, #704040 75%, #000000 100%) !important;
         min-height: 100vh;
     }
 
