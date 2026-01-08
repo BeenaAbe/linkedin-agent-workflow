@@ -437,6 +437,50 @@ st.markdown("""
         letter-spacing: 0.05em;
     }
 
+    /* Configuration section - Orange rectangular box */
+    [data-testid="stSidebar"] > div > div > div > div:has(.stRadio) {
+        background: #fff5e6 !important;
+        border: 2px solid #2a2a2a !important;
+        border-radius: 30px !important;
+        padding: 1.5rem !important;
+        margin: 1rem 0 !important;
+        box-shadow: 0 4px 0 #2a2a2a !important;
+    }
+
+    /* Radio button styling for Mode selection */
+    .stRadio > label {
+        font-weight: 700 !important;
+        font-size: 1rem !important;
+        color: #0a0a0a !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .stRadio > div {
+        background: transparent !important;
+        padding: 0.5rem 0 !important;
+    }
+
+    .stRadio > div > label {
+        background: transparent !important;
+        padding: 0.5rem 0.8rem !important;
+        border-radius: 20px !important;
+        font-weight: 500 !important;
+        font-size: 0.95rem !important;
+        color: #404040 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .stRadio > div > label:hover {
+        background: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .stRadio > div > label[data-checked="true"] {
+        background: rgba(255, 255, 255, 0.9) !important;
+        font-weight: 700 !important;
+        color: #0a0a0a !important;
+    }
+
     /* Divider */
     hr {
         border: none;
