@@ -866,27 +866,35 @@ def main():
     # Header box with title and subtitle
     st.markdown("""
     <style>
-    @keyframes gradient-shift {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-5px); }
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
     }
 
     .header-box {
-        background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 25%, #fff9c4 50%, #f3e5f5 75%, #e3f2fd 100%);
-        background-size: 200% 200%;
-        animation: gradient-shift 8s ease infinite;
+        background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 50%, #fff9c4 100%);
         border: 2px solid #2a2a2a;
         border-radius: 30px;
         padding: 2rem 2.5rem;
         margin: 1rem 0 2rem 0;
         box-shadow: 0 4px 0 #2a2a2a;
         transition: transform 0.3s ease;
+        animation: fadeIn 0.8s ease-out forwards;
     }
 
     .header-box:hover {
@@ -901,13 +909,21 @@ def main():
         color: #0a0a0a;
         font-family: 'Outfit', sans-serif;
         letter-spacing: -0.03em;
-        animation: float 3s ease-in-out infinite;
+        animation: fadeInUp 1s ease-out forwards;
+        animation-delay: 0.2s;
+        opacity: 0;
+    }
+
+    .header-subtitle {
+        animation: fadeInUp 1s ease-out forwards;
+        animation-delay: 0.4s;
+        opacity: 0;
     }
     </style>
 
     <div class="header-box">
         <h1 class="header-title">LinkedIn Content Engine</h1>
-        <p style="
+        <p class="header-subtitle" style="
             margin: 0;
             font-size: 1rem;
             color: #404040;
