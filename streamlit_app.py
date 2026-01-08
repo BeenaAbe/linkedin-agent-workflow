@@ -366,12 +366,12 @@ st.markdown("""
         color: #404040 !important;
     }
 
-    /* Sidebar connection status - Bold bordered boxes */
+    /* Sidebar connection status - Bold bordered boxes with green fill */
     [data-testid="stSidebar"] .stAlert {
-        background: #ffffff !important;
+        background: #a8d5a8 !important;
         border: 2px solid #2a2a2a !important;
         border-radius: 25px !important;
-        padding: 0.8rem 1.2rem !important;
+        padding: 0.6rem 1.2rem !important;
         color: #2a2a2a !important;
         font-weight: 600 !important;
         box-shadow: 0 3px 0 #2a2a2a !important;
