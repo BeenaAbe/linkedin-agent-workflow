@@ -843,62 +843,6 @@ def main():
             st.success("✅ Notion")
         if os.getenv("SLACK_WEBHOOK_URL"):
             st.success("✅ Slack")
-            # Test Slack button
-            if st.button("🧪 Test Slack", use_container_width=True):
-                with st.spinner("Testing Slack webhook..."):
-                    try:
-                        slack_test = SlackNotifier()
-                        webhook_url = os.getenv("SLACK_WEBHOOK_URL")
-
-                        # Show webhook status
-                        st.info(f"Webhook configured: {bool(webhook_url)}")
-
-                        test_data = {
-                            "topic": "Test Notification",
-                            "goal": "Verify Slack integration is working",
-                            "hooks": ["Test hook 1...", "Test hook 2..."],
-                            "post_body": "This is a test notification from your LinkedIn Content Engine on Streamlit Cloud.",
-                            "page_id": "test-page-id-123"
-                        }
-
-                        # Send notification
-                        import requests
-                        message = {
-                            "text": "🧪 Test notification from LinkedIn Content Engine",
-                            "blocks": [
-                                {
-                                    "type": "section",
-                                    "text": {
-                                        "type": "mrkdwn",
-                                        "text": "✅ *Slack Integration Test*\n\nYour Slack webhook is working correctly!"
-                                    }
-                                }
-                            ]
-                        }
-
-                        response = requests.post(
-                            webhook_url,
-                            json=message,
-                            headers={"Content-Type": "application/json"},
-                            timeout=10
-                        )
-
-                        st.success(f"✅ Status: {response.status_code}")
-                        st.code(f"Response: {response.text}")
-
-                        if response.status_code == 200:
-                            st.success("🎉 Test notification sent! Check your Slack channel.")
-                            add_log("Slack test notification sent successfully", "success")
-                        else:
-                            st.error(f"Failed with status {response.status_code}")
-                            add_log(f"Slack test failed: {response.text}", "error")
-
-                    except Exception as e:
-                        st.error(f"❌ Slack test failed: {str(e)}")
-                        st.code(f"Error details: {repr(e)}")
-                        add_log(f"Slack test error: {e}", "error")
-                        import traceback
-                        st.code(traceback.format_exc())
 
         st.markdown("---")
 
