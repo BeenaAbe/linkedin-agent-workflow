@@ -14,6 +14,9 @@ class SlackNotifier:
     def send_draft_notification(self, draft_data: Dict[str, Any]):
         """Send notification when draft is ready"""
 
+        print(f"🔔 Attempting to send Slack notification...")
+        print(f"   Webhook URL configured: {bool(self.webhook_url)}")
+
         if not self.webhook_url:
             print("⚠️  Slack webhook URL not configured, skipping notification")
             return
@@ -67,16 +70,22 @@ class SlackNotifier:
         }
 
         try:
+            print(f"   Sending POST request to Slack...")
             response = requests.post(
                 self.webhook_url,
                 json=message,
-                headers={"Content-Type": "application/json"}
+                headers={"Content-Type": "application/json"},
+                timeout=10
             )
+            print(f"   Response status: {response.status_code}")
+            print(f"   Response body: {response.text}")
             response.raise_for_status()
-            print("✅ Slack notification sent")
+            print("✅ Slack notification sent successfully!")
 
         except Exception as e:
             print(f"❌ Error sending Slack notification: {e}")
+            import traceback
+            traceback.print_exc()
 
     def send_error_notification(self, error_message: str, topic: str):
         """Send error notification"""
