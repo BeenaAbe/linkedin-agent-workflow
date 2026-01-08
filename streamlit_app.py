@@ -792,11 +792,6 @@ def render_progress_tracker():
 def main():
     init_session_state()
 
-    # Header
-    st.markdown('<div class="main-header">LinkedIn Content Engine</div>', unsafe_allow_html=True)
-    st.markdown("<p class='subtitle'>AI-powered content generation with research & analytics</p>", unsafe_allow_html=True)
-    st.markdown("---")
-
     # Check environment variables
     missing_vars = check_env_vars()
     if missing_vars:
