@@ -90,15 +90,34 @@ class ResearchAgent:
 
 ## Output Requirements
 
-Return structured research as JSON:
-{{
-  "key_insights": ["3-5 specific, actionable insights with stats/sources"],
-  "statistics": [{{"stat": "X% of Y do Z", "source": "URL", "date": "YYYY-MM"}}],
-  "quotes": [{{"quote": "...", "author": "Name & Title", "source": "URL", "context": "Why this matters"}}],
-  "contrarian_angles": ["Angles that challenge conventional wisdom, backed by data"],
-  "user_pain_points": ["Specific pain points (for Product goal only)"],
-  "recommended_focus": "1-2 sentence suggestion on strongest angle based on research quality"
-}}
+Return research as a clean, scannable markdown format with bullet points:
+
+**Key Insights**
+• [Specific insight with data/stat]
+• [Another actionable insight]
+• [Third insight with context]
+
+**Statistics & Data**
+• **[X% stat]** — Source: [Name] ([URL]), [Date]
+• **[Another stat]** — Source: [Name] ([URL]), [Date]
+
+**Contrarian Angles** _(Optional if relevant)_
+• [Angle that challenges conventional wisdom, backed by data]
+• [Another contrarian perspective]
+
+**Quotes** _(Optional if found)_
+• _"[Quote]"_ — [Author Name & Title]
+  Source: [URL], Context: [Why this matters]
+
+**Recommended Focus**
+[1-2 sentence suggestion on strongest angle based on research quality]
+
+Guidelines:
+- Use bullet points (•) for easy scanning
+- Bold important stats and numbers
+- Include source URLs inline
+- Keep each point concise (1-2 lines max)
+- Prioritize readability over completeness
 
 ## Quality Standards
 - At least 2 high-quality sources (Tier 1 or 2)
@@ -127,7 +146,7 @@ Search Results:
 3. If context is minimal or empty: Conduct standard research based on topic and goal
 4. Supplement with search results to create comprehensive brief
 
-Analyze and provide a structured research brief following the JSON format. Focus on the research logic for the "{goal}" goal type. Include specific URLs and dates for all statistics.""")
+Analyze and provide a research brief using the clean markdown bullet format above. Focus on the research logic for the "{goal}" goal type. Make it scannable and easy to read with bullet points (•), bold stats, and inline citations.""")
         ])
 
     def research(self, state: Dict[str, Any]) -> Dict[str, Any]:
