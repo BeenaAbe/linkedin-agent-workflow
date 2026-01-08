@@ -366,16 +366,26 @@ st.markdown("""
         color: #404040 !important;
     }
 
-    /* Sidebar connection status - Bold bordered boxes with green fill */
+    /* Sidebar connection status - Bold bordered boxes with lighter green fill */
     [data-testid="stSidebar"] .stAlert {
-        background: #a8d5a8 !important;
+        background: #d4f1d4 !important;
         border: 2px solid #2a2a2a !important;
         border-radius: 25px !important;
         padding: 0.6rem 1.2rem !important;
-        color: #2a2a2a !important;
-        font-weight: 600 !important;
+        color: #0a0a0a !important;
+        font-weight: 700 !important;
+        font-size: 0.95rem !important;
         box-shadow: 0 3px 0 #2a2a2a !important;
         margin-bottom: 0.8rem !important;
+    }
+
+    /* Remove green square background from alert icons */
+    [data-testid="stSidebar"] .stAlert > div[data-testid="stMarkdownContainer"] {
+        background: transparent !important;
+    }
+
+    [data-testid="stSidebar"] .stAlert svg {
+        display: none !important;
     }
 
     /* Input fields - Clean styling */
