@@ -1082,8 +1082,20 @@ Leave empty to let the AI research independently.""",
                                         context=context,
                                         draft_data=result
                                     )
+                                    result["page_id"] = page_id  # Update result with actual page_id
                                     add_log(f"✅ Saved to Notion! Page ID: {page_id[:8]}...", "success")
                                     st.success(f"✅ Post generated AND saved to Notion!")
+
+                                    # Send Slack notification
+                                    if os.getenv("SLACK_WEBHOOK_URL"):
+                                        try:
+                                            slack = SlackNotifier()
+                                            slack.send_draft_notification(result)
+                                            st.success("✅ Slack notification sent!")
+                                            add_log("Slack notification sent", "success")
+                                        except Exception as slack_error:
+                                            st.warning(f"⚠️ Slack notification failed: {slack_error}")
+
                             except Exception as e:
                                 st.warning(f"⚠️ Post generated but failed to save to Notion: {str(e)}")
                                 add_log(f"Error saving to Notion: {str(e)}", "error")
@@ -1202,16 +1214,20 @@ Leave empty to let the AI research independently.""",
                                     add_log(f"Processing {idx}/{len(selected_ideas_data)}: {idea['topic']}", "info")
 
                                     # Update status
+                                    add_log("📝 Setting Notion status to 'Researching'...", "info")
                                     notion.update_status(idea["page_id"], "Researching")
 
                                     # Run workflow
+                                    add_log("🚀 Starting workflow execution...", "info")
                                     result = run_workflow(idea)
+                                    add_log("✅ Workflow execution completed!", "success")
 
                                     # Update Notion
                                     add_log("💾 Updating Notion with results...", "info")
                                     notion.update_with_research(result["page_id"], result["research_brief"])
+                                    add_log("💾 Research brief saved to Notion", "success")
                                     notion.update_with_draft(result["page_id"], result)
-                                    add_log("✅ Notion updated", "success")
+                                    add_log("✅ Draft saved to Notion", "success")
 
                                     # Slack notification
                                     webhook_url = os.getenv("SLACK_WEBHOOK_URL")
@@ -1234,7 +1250,11 @@ Leave empty to let the AI research independently.""",
 
                                 except Exception as e:
                                     st.error(f"❌ Error processing {idea['topic']}: {str(e)}")
-                                    add_log(f"Error: {str(e)}", "error")
+                                    add_log(f"❌ CRITICAL ERROR: {str(e)}", "error")
+                                    import traceback
+                                    error_details = traceback.format_exc()
+                                    add_log(f"Stack trace: {error_details[:500]}", "error")
+                                    st.code(error_details)
 
                             # Complete
                             progress_bar.progress(1.0)
