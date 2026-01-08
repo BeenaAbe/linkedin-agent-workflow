@@ -442,9 +442,13 @@ st.markdown("""
         background: #fff5e6 !important;
         border: 2px solid #2a2a2a !important;
         border-radius: 30px !important;
-        padding: 1.5rem !important;
+        padding: 1.2rem 1.5rem !important;
         margin: 1rem 0 1.5rem 0 !important;
         box-shadow: 0 4px 0 #2a2a2a !important;
+    }
+
+    /* Ensure radio buttons container takes full width */
+    [data-testid="stSidebar"] .stRadio > div {
         width: 100% !important;
     }
 
