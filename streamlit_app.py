@@ -792,7 +792,7 @@ def main():
 
 Leave empty to let the AI research independently.""",
             help="Add links, rough notes, ideas, or specific instructions. The AI will use whatever you provide as guidance. Works with minimal or detailed input!",
-            height=120
+            height=180
         )
 
         # Save to Notion checkbox
