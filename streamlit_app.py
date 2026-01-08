@@ -84,7 +84,7 @@ st.markdown("""
         color: #0077B5;
     }
 
-    /* Hook cards - Muted color backgrounds */
+    /* Hook cards - Muted color backgrounds with subtle variations */
     .hook-card {
         background: #f8f8f7;
         padding: 2rem;
@@ -101,6 +101,22 @@ st.markdown("""
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
     }
 
+    /* Subtle color tints for visual variety */
+    .hook-card:nth-child(1) {
+        background: linear-gradient(135deg, #fff0f7 0%, #fff5fb 100%);
+        border-left: 3px solid #c72a6e;
+    }
+
+    .hook-card:nth-child(2) {
+        background: linear-gradient(135deg, #fffbeb 0%, #fffef5 100%);
+        border-left: 3px solid #d97706;
+    }
+
+    .hook-card:nth-child(3) {
+        background: linear-gradient(135deg, #fff7ed 0%, #fffcf5 100%);
+        border-left: 3px solid #ea580c;
+    }
+
     .hook-type-badge {
         display: inline-block;
         padding: 0.35rem 0.85rem;
@@ -113,21 +129,21 @@ st.markdown("""
     }
 
     .badge-controversial {
-        background: #f5f3f3;
-        color: #8b6b6b;
-        border: 1px solid #e5e0e0;
+        background: #fff0f7;
+        color: #c72a6e;
+        border: 1px solid #ffd6eb;
     }
 
     .badge-question {
-        background: #f3f5f5;
-        color: #6b7b8b;
-        border: 1px solid #e0e5e8;
+        background: #fffbeb;
+        color: #d97706;
+        border: 1px solid #fef3c7;
     }
 
     .badge-story {
-        background: #f3f5f3;
-        color: #6b8b6b;
-        border: 1px solid #e0e8e0;
+        background: #fff7ed;
+        color: #ea580c;
+        border: 1px solid #fed7aa;
     }
 
     .hook-text {
@@ -144,14 +160,22 @@ st.markdown("""
         font-weight: 400;
     }
 
-    /* Metrics */
+    /* Metrics - Yellow and Pink accents */
     .metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        color: #78350f;
         padding: 1.5rem;
         border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.25);
         text-align: center;
+        border: 1px solid #fde68a;
+    }
+
+    .metric-card:nth-child(2) {
+        background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.25);
+        border: 1px solid #f9a8d4;
     }
 
     .metric-value {
@@ -219,9 +243,9 @@ st.markdown("""
     }
 
     .warning-box {
-        background: #f5f4f3;
-        border-color: #e5dfd0;
-        color: #8b7d5a;
+        background: #fffbeb;
+        border-color: #fde047;
+        color: #ca8a04;
     }
 
     .info-box {
