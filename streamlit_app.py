@@ -1126,11 +1126,13 @@ Leave empty to let the AI research independently.""",
 
         # Fetch ideas once
         try:
-            notion = NotionClient()
-            all_ideas = notion.get_all_pending_ideas()
+            with st.spinner("🔄 Fetching ideas from Notion..."):
+                notion = NotionClient()
+                all_ideas = notion.get_all_pending_ideas()
 
             if not all_ideas:
                 st.info("📭 No pending ideas found in Notion. Add ideas with Status = 'Idea' to your database.")
+                st.caption("💡 Make sure your Notion database has items with the Status field set to 'Idea'")
             else:
                 st.success(f"✨ Found {len(all_ideas)} pending idea(s)")
 
