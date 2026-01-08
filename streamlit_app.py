@@ -46,9 +46,15 @@ st.markdown("""
         letter-spacing: -0.01em;
     }
 
-    /* Main app background - muted orange */
+    /* Main app background - coral/peachy gradient (Monolitt-inspired) */
     .stApp {
-        background: #fff7ed;
+        background: linear-gradient(180deg, #ffb5a7 0%, #ffa8a5 30%, #ff9bb5 60%, #ff8fc5 100%) !important;
+        min-height: 100vh;
+    }
+
+    /* Ensure main content area is transparent to show gradient */
+    .main {
+        background: transparent !important;
     }
 
     /* Main container spacing */
