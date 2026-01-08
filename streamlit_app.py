@@ -46,9 +46,9 @@ st.markdown("""
         letter-spacing: -0.01em;
     }
 
-    /* Main app background - coral to black gradient */
+    /* Main app background - warm orange gradient (Sunlitt-inspired) */
     .stApp {
-        background: linear-gradient(180deg, #e07856 0%, #d06850 25%, #a05048 50%, #704040 75%, #000000 100%) !important;
+        background: linear-gradient(180deg, #f9a825 0%, #f57c00 30%, #e64a19 70%, #bf360c 100%) !important;
         min-height: 100vh;
     }
 
@@ -70,14 +70,15 @@ st.markdown("""
         font-weight: 800;
         text-align: center;
         padding: 1.5rem 0 0.5rem 0;
-        color: #0a0a0a;
+        color: #ffffff;
         letter-spacing: -0.04em;
         line-height: 1;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.15);
     }
 
     .subtitle {
         text-align: center;
-        color: #737373;
+        color: rgba(255, 255, 255, 0.85);
         font-size: 1.1rem;
         margin-top: 0.8rem;
         margin-bottom: 3.5rem;
@@ -90,44 +91,30 @@ st.markdown("""
         color: #0077B5;
     }
 
-    /* Hook cards - Muted color backgrounds with subtle variations */
+    /* Hook cards - Rounded white cards like Sunlitt */
     .hook-card {
-        background: #f8f8f7;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
         padding: 2rem;
-        border-radius: 12px;
-        border: 1px solid #e8e8e6;
+        border-radius: 24px;
+        border: none;
         margin: 1.5rem 0;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         position: relative;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     }
 
     .hook-card:hover {
-        background: #f3f3f1;
-        border-color: #d4d4d2;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-    }
-
-    /* Subtle color tints for visual variety */
-    .hook-card:nth-child(1) {
-        background: linear-gradient(135deg, #fff0f7 0%, #fff5fb 100%);
-        border-left: 3px solid #c72a6e;
-    }
-
-    .hook-card:nth-child(2) {
-        background: linear-gradient(135deg, #fffbeb 0%, #fffef5 100%);
-        border-left: 3px solid #d97706;
-    }
-
-    .hook-card:nth-child(3) {
-        background: linear-gradient(135deg, #fff7ed 0%, #fffcf5 100%);
-        border-left: 3px solid #ea580c;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+        transform: translateY(-2px);
     }
 
     .hook-type-badge {
         display: inline-block;
-        padding: 0.35rem 0.85rem;
-        border-radius: 6px;
-        font-size: 0.7rem;
+        padding: 0.5rem 1.2rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
         font-weight: 600;
         margin-bottom: 1rem;
         text-transform: uppercase;
@@ -135,21 +122,21 @@ st.markdown("""
     }
 
     .badge-controversial {
-        background: #fff0f7;
-        color: #c72a6e;
-        border: 1px solid #ffd6eb;
+        background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+        color: white;
+        border: none;
     }
 
     .badge-question {
-        background: #fffbeb;
-        color: #d97706;
-        border: 1px solid #fef3c7;
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        color: #78350f;
+        border: none;
     }
 
     .badge-story {
-        background: #fff7ed;
-        color: #ea580c;
-        border: 1px solid #fed7aa;
+        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        color: white;
+        border: none;
     }
 
     .hook-text {
@@ -197,13 +184,15 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    /* Progress indicators - Muted style */
+    /* Progress indicators - Rounded white cards */
     .progress-container {
-        background: #f8f8f7;
-        border: 1px solid #e8e8e6;
-        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 24px;
         padding: 2rem;
         margin: 1.5rem 0;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     }
 
     .progress-step {
@@ -260,15 +249,16 @@ st.markdown("""
         color: #5a6b7a;
     }
 
-    /* LinkedIn preview - Muted card */
+    /* LinkedIn preview - Rounded white card */
     .linkedin-preview {
-        background: #f8f8f7;
-        border: 1px solid #e8e8e6;
-        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 24px;
         padding: 2rem;
         max-width: 650px;
         margin: 1.5rem auto;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     }
 
     .linkedin-preview-header {
@@ -292,67 +282,79 @@ st.markdown("""
         white-space: pre-wrap;
     }
 
-    /* Queue card - Muted style */
+    /* Queue card - Rounded white card */
     .queue-card {
-        background: #f8f8f7;
-        border: 1px solid #e8e8e6;
-        border-radius: 10px;
-        padding: 1.2rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 20px;
+        padding: 1.5rem;
         margin: 0.8rem 0;
-        transition: all 0.15s ease;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .queue-card:hover {
-        background: #f3f3f1;
-        border-color: #d4d4d2;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
     }
 
-    /* Button styling - Clean and minimal */
+    /* Button styling - Rounded Sunlitt-style buttons */
     .stButton>button {
-        border-radius: 8px;
-        font-weight: 500;
-        transition: all 0.15s ease;
-        border: 1px solid #e5e5e5;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
         font-family: 'Outfit', sans-serif;
-        padding: 0.6rem 1.5rem;
+        padding: 0.9rem 2rem;
         letter-spacing: -0.01em;
+        background: rgba(255, 255, 255, 0.95);
+        color: #404040;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .stButton>button:hover {
-        border-color: #0077B5;
-        background: #fafafa;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
     }
 
     .stButton>button[kind="primary"] {
-        background: #0077B5;
+        background: linear-gradient(135deg, #0077B5 0%, #005a8a 100%);
         color: white;
-        border: 1px solid #0077B5;
+        border: none;
     }
 
     .stButton>button[kind="primary"]:hover {
-        background: #005a8a;
-        border-color: #005a8a;
+        background: linear-gradient(135deg, #005a8a 0%, #004870 100%);
+        box-shadow: 0 8px 32px rgba(0, 119, 181, 0.3);
     }
 
-    /* Sidebar styling */
+    /* Sidebar styling - Darker semi-transparent overlay */
     [data-testid="stSidebar"] {
-        background: #f8f8f7;
-        border-right: 1px solid #e5e5e5;
+        background: rgba(0, 0, 0, 0.25) !important;
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     [data-testid="stSidebar"] h2 {
         font-weight: 600;
         font-size: 1.1rem;
-        color: #171717;
+        color: #ffffff !important;
         letter-spacing: -0.01em;
     }
 
     [data-testid="stSidebar"] h3 {
         font-weight: 600;
         font-size: 0.95rem;
-        color: #404040;
+        color: rgba(255, 255, 255, 0.85) !important;
         letter-spacing: -0.01em;
+    }
+
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] label {
+        color: rgba(255, 255, 255, 0.85) !important;
     }
 
     /* Sidebar connection status - Round bubble boxes */
