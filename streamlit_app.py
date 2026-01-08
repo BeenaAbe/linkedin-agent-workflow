@@ -522,6 +522,23 @@ st.markdown("""
         color: #0a0a0a !important;
     }
 
+    /* Main content headings - Outfit font alignment */
+    .main h2, .main h3, .main h4 {
+        font-family: 'Outfit', sans-serif !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.02em !important;
+        color: #0a0a0a !important;
+    }
+
+    .main h2 {
+        font-size: 1.8rem !important;
+        margin-top: 1.5rem !important;
+    }
+
+    .main h3 {
+        font-size: 1.4rem !important;
+    }
+
     /* Divider */
     hr {
         border: none;
