@@ -865,22 +865,48 @@ def main():
     # Main content area
     # Header box with title and subtitle
     st.markdown("""
-    <div style="
-        background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 50%, #fff9c4 100%);
+    <style>
+    @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+    }
+
+    .header-box {
+        background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 25%, #fff9c4 50%, #f3e5f5 75%, #e3f2fd 100%);
+        background-size: 200% 200%;
+        animation: gradient-shift 8s ease infinite;
         border: 2px solid #2a2a2a;
         border-radius: 30px;
         padding: 2rem 2.5rem;
         margin: 1rem 0 2rem 0;
         box-shadow: 0 4px 0 #2a2a2a;
-    ">
-        <h1 style="
-            margin: 0 0 0.5rem 0;
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #0a0a0a;
-            font-family: 'Outfit', sans-serif;
-            letter-spacing: -0.03em;
-        ">LinkedIn Content Engine</h1>
+        transition: transform 0.3s ease;
+    }
+
+    .header-box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 #2a2a2a;
+    }
+
+    .header-title {
+        margin: 0 0 0.5rem 0;
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #0a0a0a;
+        font-family: 'Outfit', sans-serif;
+        letter-spacing: -0.03em;
+        animation: float 3s ease-in-out infinite;
+    }
+    </style>
+
+    <div class="header-box">
+        <h1 class="header-title">LinkedIn Content Engine</h1>
         <p style="
             margin: 0;
             font-size: 1rem;
