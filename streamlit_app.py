@@ -437,23 +437,14 @@ st.markdown("""
         letter-spacing: 0.05em;
     }
 
-    /* Configuration section - Orange rectangular box with full height */
-    [data-testid="stSidebar"] > div > div > div > div:has(.stRadio) {
+    /* Configuration section - Orange rectangular box covering just the mode section */
+    .stRadio {
         background: #fff5e6 !important;
         border: 2px solid #2a2a2a !important;
         border-radius: 30px !important;
         padding: 1.5rem !important;
         margin: 1rem 0 !important;
         box-shadow: 0 4px 0 #2a2a2a !important;
-        min-height: 100% !important;
-        flex-grow: 1 !important;
-    }
-
-    /* Make sidebar content container flexible */
-    [data-testid="stSidebar"] > div > div > div {
-        display: flex !important;
-        flex-direction: column !important;
-        min-height: 100% !important;
     }
 
     /* Radio button styling for Mode selection */
