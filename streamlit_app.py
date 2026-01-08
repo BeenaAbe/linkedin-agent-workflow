@@ -388,20 +388,39 @@ st.markdown("""
         display: none !important;
     }
 
-    /* Input fields - Clean styling */
+    /* Input fields - Orange palette with bold borders */
     .stTextInput>div>div>input,
     .stTextArea>div>div>textarea,
     .stSelectbox>div>div>select {
-        border: 1px solid #e5e5e5;
-        border-radius: 8px;
+        background: #fff5e6 !important;
+        border: 2px solid #2a2a2a !important;
+        border-radius: 25px !important;
         font-family: 'Outfit', sans-serif;
-        font-size: 0.95rem;
+        font-size: 0.95rem !important;
+        padding: 0.8rem 1.2rem !important;
+        font-weight: 500 !important;
+        box-shadow: 0 3px 0 #2a2a2a !important;
     }
 
     .stTextInput>div>div>input:focus,
-    .stTextArea>div>div>textarea:focus {
-        border-color: #0077B5;
-        box-shadow: 0 0 0 1px #0077B5;
+    .stTextArea>div>div>textarea:focus,
+    .stSelectbox>div>div>select:focus {
+        border-color: #2a2a2a !important;
+        box-shadow: 0 4px 0 #2a2a2a !important;
+        outline: none !important;
+    }
+
+    /* Text area specific - larger rectangular box */
+    .stTextArea>div>div>textarea {
+        border-radius: 30px !important;
+        min-height: 120px !important;
+        background: #fff5e6 !important;
+    }
+
+    /* Selectbox styling */
+    .stSelectbox>div>div {
+        background: #fff5e6 !important;
+        border-radius: 25px !important;
     }
 
     /* Tabs styling */
