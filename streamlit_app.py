@@ -349,11 +349,14 @@ st.markdown("""
         letter-spacing: -0.01em;
     }
 
-    /* Sidebar success boxes - Muted style */
+    /* Sidebar connection status - Round bubble boxes */
     [data-testid="stSidebar"] .stAlert {
-        background: #f3f5f3 !important;
-        border: 1px solid #d8e3d8 !important;
-        color: #5a7a5a !important;
+        background: #ffffff !important;
+        border: 1px solid #e8e8e6 !important;
+        border-radius: 20px !important;
+        padding: 0.8rem 1.2rem !important;
+        color: #404040 !important;
+        font-weight: 500 !important;
     }
 
     /* Input fields - Clean styling */
