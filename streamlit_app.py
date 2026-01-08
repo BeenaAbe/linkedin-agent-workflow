@@ -34,108 +34,113 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Modern Gradient UI - LinkedIn Brand Colors
+# Makepresentable-Inspired Design - Clean, Modern, Professional
 st.markdown("""
 <style>
-    /* Import modern font */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    /* Import Outfit font (similar to makepresentable) */
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-    /* Global typography */
+    /* Global reset and typography */
     * {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+        letter-spacing: -0.01em;
     }
 
-    /* Main app background with subtle gradient */
+    /* Main app background - clean white with subtle texture */
     .stApp {
-        background: linear-gradient(to bottom, #ffffff 0%, #f8f9fb 100%);
+        background: #fafafa;
     }
 
-    /* Main header with LinkedIn gradient */
+    /* Main container spacing */
+    .main .block-container {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+        max-width: 1100px;
+    }
+
+    /* Main header - clean, bold, minimal */
     .main-header {
-        font-size: 3.5rem;
-        font-weight: 800;
+        font-size: 3.8rem;
+        font-weight: 700;
         text-align: center;
-        padding: 2rem 0 1rem 0;
-        background: linear-gradient(135deg, #0077B5 0%, #00A0DC 50%, #0077B5 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-size: 200% 200%;
-        animation: gradient-shift 8s ease infinite;
-        letter-spacing: -1px;
-    }
-
-    @keyframes gradient-shift {
-        0%, 100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
+        padding: 1rem 0 0.5rem 0;
+        color: #0a0a0a;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
     }
 
     .subtitle {
         text-align: center;
         color: #666;
-        font-size: 1.1rem;
-        margin-top: -0.5rem;
-        margin-bottom: 2.5rem;
-        font-weight: 500;
+        font-size: 1.05rem;
+        margin-top: 0.5rem;
+        margin-bottom: 3rem;
+        font-weight: 400;
+        letter-spacing: -0.01em;
     }
 
-    /* Hook cards - Enhanced with modern gradients */
+    /* LinkedIn accent color */
+    .accent {
+        color: #0077B5;
+    }
+
+    /* Hook cards - Clean, minimal style */
     .hook-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
-        padding: 1.8rem;
-        border-radius: 16px;
-        border-left: 4px solid #0077B5;
-        box-shadow: 0 2px 8px rgba(0, 119, 181, 0.08);
-        margin: 1.2rem 0;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid #e5e5e5;
+        margin: 1.5rem 0;
+        transition: all 0.2s ease;
+        position: relative;
     }
 
     .hook-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 119, 181, 0.15);
-        border-left-color: #00A0DC;
+        border-color: #0077B5;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     }
 
     .hook-type-badge {
         display: inline-block;
-        padding: 0.4rem 1rem;
-        border-radius: 24px;
-        font-size: 0.75rem;
-        font-weight: 700;
+        padding: 0.35rem 0.85rem;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 600;
         margin-bottom: 1rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.08em;
     }
 
     .badge-controversial {
-        background: linear-gradient(135deg, #FF6B6B, #FF8E53);
-        color: white;
-        box-shadow: 0 2px 8px rgba(255, 107, 107, 0.25);
+        background: #fff0f0;
+        color: #d63031;
+        border: 1px solid #ffe5e5;
     }
 
     .badge-question {
-        background: linear-gradient(135deg, #4ECDC4, #44A08D);
-        color: white;
-        box-shadow: 0 2px 8px rgba(78, 205, 196, 0.25);
+        background: #f0f9ff;
+        color: #0077B5;
+        border: 1px solid #e0f2fe;
     }
 
     .badge-story {
-        background: linear-gradient(135deg, #A8E6CF, #56AB91);
-        color: white;
-        box-shadow: 0 2px 8px rgba(168, 230, 207, 0.25);
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1px solid #dcfce7;
     }
 
     .hook-text {
-        font-size: 1.15rem;
-        line-height: 1.7;
-        color: #1a1a1a;
-        font-weight: 500;
+        font-size: 1.1rem;
+        line-height: 1.65;
+        color: #171717;
+        font-weight: 400;
     }
 
     .char-count {
-        font-size: 0.875rem;
-        color: #666;
-        margin-top: 0.8rem;
-        font-weight: 500;
+        font-size: 0.85rem;
+        color: #737373;
+        margin-top: 1rem;
+        font-weight: 400;
     }
 
     /* Metrics */
@@ -161,19 +166,20 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    /* Progress indicators */
+    /* Progress indicators - Clean style */
     .progress-container {
-        background: #f8f9fa;
+        background: #ffffff;
+        border: 1px solid #e5e5e5;
         border-radius: 12px;
-        padding: 1.5rem;
-        margin: 1rem 0;
+        padding: 2rem;
+        margin: 1.5rem 0;
     }
 
     .progress-step {
         display: flex;
         align-items: center;
-        padding: 0.8rem 0;
-        border-bottom: 1px solid #e9ecef;
+        padding: 0.9rem 0;
+        border-bottom: 1px solid #f5f5f5;
     }
 
     .progress-step:last-child {
@@ -181,58 +187,57 @@ st.markdown("""
     }
 
     .progress-icon {
-        font-size: 1.5rem;
-        margin-right: 1rem;
+        font-size: 1.4rem;
+        margin-right: 1.2rem;
     }
 
     .progress-text {
         flex: 1;
-        font-size: 1rem;
-        color: #495057;
+        font-size: 0.95rem;
+        color: #404040;
     }
 
-    /* Status boxes */
+    /* Status boxes - Minimal clean design */
     .status-box {
         padding: 1rem 1.5rem;
-        border-radius: 12px;
+        border-radius: 8px;
         margin: 1rem 0;
-        border-left: 5px solid;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border: 1px solid;
     }
 
     .success-box {
-        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-        border-left-color: #28a745;
-        color: #155724;
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+        color: #166534;
     }
 
     .error-box {
-        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-        border-left-color: #dc3545;
-        color: #721c24;
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #991b1b;
     }
 
     .warning-box {
-        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-        border-left-color: #ffc107;
-        color: #856404;
+        background: #fffbeb;
+        border-color: #fde68a;
+        color: #92400e;
     }
 
     .info-box {
-        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
-        border-left-color: #17a2b8;
-        color: #0c5460;
+        background: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1e40af;
     }
 
-    /* LinkedIn preview */
+    /* LinkedIn preview - Clean minimal card */
     .linkedin-preview {
-        background: white;
-        border: 1px solid #e0e0e0;
+        background: #ffffff;
+        border: 1px solid #e5e5e5;
         border-radius: 12px;
-        padding: 1.5rem;
-        max-width: 600px;
-        margin: 1rem auto;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 650px;
+        margin: 1.5rem auto;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     }
 
     .linkedin-preview-header {
@@ -245,71 +250,139 @@ st.markdown("""
         width: 48px;
         height: 48px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #0077B5, #00A0DC);
-        margin-right: 12px;
+        background: #0077B5;
+        margin-right: 14px;
     }
 
     .linkedin-preview-content {
         font-size: 0.95rem;
-        line-height: 1.6;
-        color: rgba(0, 0, 0, 0.9);
+        line-height: 1.65;
+        color: #171717;
         white-space: pre-wrap;
     }
 
-    /* Queue card */
+    /* Queue card - Clean minimal style */
     .queue-card {
-        background: white;
-        border: 2px solid #e9ecef;
-        border-radius: 12px;
-        padding: 1rem;
-        margin: 0.5rem 0;
-        transition: all 0.3s;
+        background: #ffffff;
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+        padding: 1.2rem;
+        margin: 0.8rem 0;
+        transition: all 0.15s ease;
     }
 
     .queue-card:hover {
         border-color: #0077B5;
-        box-shadow: 0 4px 8px rgba(0, 119, 181, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
-    /* Button enhancements - Modern LinkedIn style */
+    /* Button styling - Clean and minimal */
     .stButton>button {
-        border-radius: 10px;
-        font-weight: 600;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 2px solid transparent;
-        font-family: 'Inter', sans-serif;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.15s ease;
+        border: 1px solid #e5e5e5;
+        font-family: 'Outfit', sans-serif;
+        padding: 0.6rem 1.5rem;
+        letter-spacing: -0.01em;
     }
 
     .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 119, 181, 0.25);
+        border-color: #0077B5;
+        background: #fafafa;
     }
 
     .stButton>button[kind="primary"] {
-        background: linear-gradient(135deg, #0077B5 0%, #00A0DC 100%);
-        box-shadow: 0 4px 12px rgba(0, 119, 181, 0.2);
+        background: #0077B5;
+        color: white;
+        border: 1px solid #0077B5;
     }
 
     .stButton>button[kind="primary"]:hover {
-        background: linear-gradient(135deg, #006399 0%, #0088c2 100%);
-        box-shadow: 0 6px 20px rgba(0, 119, 181, 0.35);
+        background: #005a8a;
+        border-color: #005a8a;
     }
 
-    /* Copy button */
-    .copy-btn {
-        background: linear-gradient(135deg, #0077B5, #00A0DC);
-        color: white;
-        border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 8px;
+    /* Sidebar styling */
+    [data-testid="stSidebar"] {
+        background: #ffffff;
+        border-right: 1px solid #e5e5e5;
+    }
+
+    [data-testid="stSidebar"] h2 {
         font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
+        font-size: 1.1rem;
+        color: #171717;
+        letter-spacing: -0.01em;
     }
 
-    .copy-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 119, 181, 0.4);
+    /* Input fields - Clean styling */
+    .stTextInput>div>div>input,
+    .stTextArea>div>div>textarea,
+    .stSelectbox>div>div>select {
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.95rem;
+    }
+
+    .stTextInput>div>div>input:focus,
+    .stTextArea>div>div>textarea:focus {
+        border-color: #0077B5;
+        box-shadow: 0 0 0 1px #0077B5;
+    }
+
+    /* Tabs styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0.5rem;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 500;
+        color: #737373;
+        font-size: 0.95rem;
+        padding: 0.6rem 1.2rem;
+    }
+
+    .stTabs [aria-selected="true"] {
+        color: #0077B5;
+        font-weight: 600;
+    }
+
+    /* Metrics styling */
+    [data-testid="stMetricValue"] {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0a0a0a;
+    }
+
+    [data-testid="stMetricLabel"] {
+        color: #737373;
+        font-weight: 500;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Divider */
+    hr {
+        border: none;
+        border-top: 1px solid #e5e5e5;
+        margin: 2.5rem 0;
+    }
+
+    /* Expander */
+    .streamlit-expanderHeader {
+        background: #ffffff;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    /* Remove default Streamlit padding on certain elements */
+    .element-container {
+        margin-bottom: 0.5rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -548,8 +621,8 @@ def main():
     init_session_state()
 
     # Header
-    st.markdown('<div class="main-header">🚀 LinkedIn Content Engine</div>', unsafe_allow_html=True)
-    st.markdown("<p class='subtitle'>AI-Powered Content Generation with Research & Analytics</p>", unsafe_allow_html=True)
+    st.markdown('<div class="main-header">LinkedIn Content Engine</div>', unsafe_allow_html=True)
+    st.markdown("<p class='subtitle'>AI-powered content generation with research & analytics</p>", unsafe_allow_html=True)
     st.markdown("---")
 
     # Check environment variables
