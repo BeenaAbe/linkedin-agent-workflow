@@ -382,6 +382,8 @@ st.markdown("""
         font-size: 0.95rem !important;
         box-shadow: 0 3px 0 #2a2a2a !important;
         margin-bottom: 0.8rem !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
     }
 
     /* Remove green square background from alert icons */
@@ -442,7 +444,7 @@ st.markdown("""
         letter-spacing: 0.05em;
     }
 
-    /* Configuration section - Orange rectangular box covering just the mode section */
+    /* Configuration section - Orange rectangular box matching alert width */
     [data-testid="stSidebar"] .stRadio {
         background: #fff5e6 !important;
         border: 2px solid #2a2a2a !important;
@@ -451,7 +453,10 @@ st.markdown("""
         margin: 1rem 0 1.5rem 0 !important;
         box-shadow: 0 4px 0 #2a2a2a !important;
         display: block !important;
-        width: calc(100% - 0rem) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
     }
 
     /* Ensure radio buttons container takes full width */
