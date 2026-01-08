@@ -46,9 +46,9 @@ st.markdown("""
         letter-spacing: -0.01em;
     }
 
-    /* Main app background - clean white with subtle texture */
+    /* Main app background - muted warm off-white */
     .stApp {
-        background: #fafafa;
+        background: #f5f5f4;
     }
 
     /* Main container spacing */
@@ -307,7 +307,7 @@ st.markdown("""
 
     /* Sidebar styling */
     [data-testid="stSidebar"] {
-        background: #fafafa;
+        background: #f8f8f7;
         border-right: 1px solid #e5e5e5;
     }
 
