@@ -1062,7 +1062,13 @@ Leave empty to let the AI research independently.""",
 
     elif mode == "notion":
         st.markdown("## 📋 Notion Queue")
-        st.markdown("Select ideas from your database and process them (single or batch)")
+
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            st.markdown("Select ideas from your database and process them (single or batch)")
+        with col2:
+            if st.button("🔄 Refresh", use_container_width=True):
+                st.rerun()
 
         # Initialize selected_ideas in session state
         if 'selected_ideas' not in st.session_state:
