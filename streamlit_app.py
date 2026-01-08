@@ -366,14 +366,16 @@ st.markdown("""
         color: #404040 !important;
     }
 
-    /* Sidebar connection status - Round bubble boxes */
+    /* Sidebar connection status - Bold bordered boxes */
     [data-testid="stSidebar"] .stAlert {
         background: #ffffff !important;
-        border: 1px solid #e8e8e6 !important;
-        border-radius: 20px !important;
+        border: 2px solid #2a2a2a !important;
+        border-radius: 25px !important;
         padding: 0.8rem 1.2rem !important;
-        color: #404040 !important;
-        font-weight: 500 !important;
+        color: #2a2a2a !important;
+        font-weight: 600 !important;
+        box-shadow: 0 3px 0 #2a2a2a !important;
+        margin-bottom: 0.8rem !important;
     }
 
     /* Input fields - Clean styling */
