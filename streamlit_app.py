@@ -1208,19 +1208,26 @@ Leave empty to let the AI research independently.""",
                                     result = run_workflow(idea)
 
                                     # Update Notion
+                                    add_log("💾 Updating Notion with results...", "info")
                                     notion.update_with_research(result["page_id"], result["research_brief"])
                                     notion.update_with_draft(result["page_id"], result)
+                                    add_log("✅ Notion updated", "success")
 
                                     # Slack notification
-                                    if os.getenv("SLACK_WEBHOOK_URL"):
+                                    webhook_url = os.getenv("SLACK_WEBHOOK_URL")
+                                    add_log(f"🔍 Checking Slack webhook (configured: {bool(webhook_url)})", "info")
+
+                                    if webhook_url:
                                         try:
                                             add_log("📤 Sending Slack notification...", "info")
                                             slack = SlackNotifier()
                                             slack.send_draft_notification(result)
-                                            add_log("✅ Slack notification sent", "success")
+                                            add_log("✅ Slack notification sent successfully!", "success")
                                         except Exception as slack_error:
                                             add_log(f"⚠️ Slack notification failed: {slack_error}", "error")
                                             st.warning(f"Slack notification failed: {slack_error}")
+                                    else:
+                                        add_log("⚠️ Slack webhook not configured, skipping notification", "info")
 
                                     results_list.append(result)
                                     add_log(f"✅ Completed: {idea['topic']}", "success")
