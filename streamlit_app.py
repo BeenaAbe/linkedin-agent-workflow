@@ -450,6 +450,12 @@ st.markdown("""
         letter-spacing: 0.05em;
     }
 
+    /* Force radio parent to match alert parent width */
+    [data-testid="stSidebar"] > div > div > div {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
     /* Configuration section - Orange rectangular box matching alert width */
     [data-testid="stSidebar"] .stRadio {
         background: #fff5e6 !important;
@@ -460,6 +466,7 @@ st.markdown("""
         box-shadow: 0 4px 0 #2a2a2a !important;
         display: block !important;
         width: 100% !important;
+        max-width: 100% !important;
         box-sizing: border-box !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
@@ -468,7 +475,17 @@ st.markdown("""
     /* Ensure radio buttons container takes full width */
     [data-testid="stSidebar"] .stRadio > div {
         width: 100% !important;
+        max-width: 100% !important;
         display: block !important;
+    }
+
+    /* Remove any default margins on stRadio wrapper */
+    [data-testid="stSidebar"] div:has(> .stRadio) {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100% !important;
     }
 
     /* Radio button styling for Mode selection */
