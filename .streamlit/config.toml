@@ -1,7 +1,7 @@
 [theme]
 primaryColor = "#0077B5"  # LinkedIn Blue
-backgroundColor = "#f5f0e8"  # Warm beige
-secondaryBackgroundColor = "#f5e6d3"  # Tan for cards
+backgroundColor = "#ffffff"  # Clean white
+secondaryBackgroundColor = "#ffffff"  # White for cards
 textColor = "#0a0a0a"  # Deep black
 font = "sans serif"
 
