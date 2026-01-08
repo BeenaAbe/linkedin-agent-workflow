@@ -348,8 +348,14 @@ st.markdown("""
     }
 
     /* Ensure sidebar content has consistent padding */
-    [data-testid="stSidebar"] > div {
-        padding: 1rem 1rem !important;
+    [data-testid="stSidebar"] .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] > [style*="flex-direction: column;"] > div {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
     }
 
     [data-testid="stSidebar"] h2 {
