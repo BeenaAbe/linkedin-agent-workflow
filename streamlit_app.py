@@ -438,13 +438,14 @@ st.markdown("""
     }
 
     /* Configuration section - Orange rectangular box covering just the mode section */
-    .stRadio {
+    [data-testid="stSidebar"] .stRadio {
         background: #fff5e6 !important;
         border: 2px solid #2a2a2a !important;
         border-radius: 30px !important;
         padding: 1.5rem !important;
-        margin: 1rem 0 !important;
+        margin: 1rem 0 1.5rem 0 !important;
         box-shadow: 0 4px 0 #2a2a2a !important;
+        width: 100% !important;
     }
 
     /* Radio button styling for Mode selection */
