@@ -330,15 +330,16 @@ st.markdown("""
     }
 
     .stButton>button[kind="primary"] {
-        background: #0a0a0a;
-        color: white;
-        border: 2px solid #0a0a0a;
-        box-shadow: 0 4px 0 #0a0a0a;
+        background: #ffffff;
+        color: #0a0a0a;
+        border: 2px solid #2a2a2a;
+        box-shadow: 0 4px 0 #2a2a2a;
+        font-weight: 700;
     }
 
     .stButton>button[kind="primary"]:hover {
         transform: translateY(-3px);
-        box-shadow: 0 7px 0 #0a0a0a;
+        box-shadow: 0 7px 0 #2a2a2a;
     }
 
     /* Sidebar styling - Clean light sidebar */
