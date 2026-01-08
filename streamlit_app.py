@@ -46,9 +46,9 @@ st.markdown("""
         letter-spacing: -0.01em;
     }
 
-    /* Main app background - clean off-white */
+    /* Main app background - warm beige tones */
     .stApp {
-        background: #f5f5f0 !important;
+        background: #f5f0e8 !important;
         min-height: 100vh;
     }
 
@@ -90,9 +90,9 @@ st.markdown("""
         color: #0077B5;
     }
 
-    /* Hook cards - Rounded cards with subtle colored backgrounds */
+    /* Hook cards - Rounded cards with warm beige/tan tones */
     .hook-card {
-        background: #ffffff;
+        background: #f5e6d3;
         padding: 1.8rem;
         border-radius: 30px;
         border: 2px solid #2a2a2a;
@@ -107,20 +107,20 @@ st.markdown("""
         box-shadow: 0 7px 0 #2a2a2a;
     }
 
-    /* Color variations for cards */
+    /* Color variations for cards - warm tan palette */
     .hook-card:nth-child(1) {
-        background: #fef5e7;
-        border-color: #e8c89b;
+        background: #f5e6d3;
+        border-color: #d4a574;
     }
 
     .hook-card:nth-child(2) {
-        background: #e8f5e9;
-        border-color: #a5d6a7;
+        background: #f0dcc8;
+        border-color: #c9986a;
     }
 
     .hook-card:nth-child(3) {
-        background: #e3f2fd;
-        border-color: #90caf9;
+        background: #ead2bd;
+        border-color: #bf8b60;
     }
 
     .hook-type-badge {
@@ -136,21 +136,21 @@ st.markdown("""
     }
 
     .badge-controversial {
-        background: #fef5e7;
-        color: #c17817;
-        border-color: #c17817;
+        background: #e8d4bd;
+        color: #7d5a3d;
+        border-color: #7d5a3d;
     }
 
     .badge-question {
-        background: #e8f5e9;
-        color: #4a7c4e;
-        border-color: #4a7c4e;
+        background: #dcc7b0;
+        color: #6b5240;
+        border-color: #6b5240;
     }
 
     .badge-story {
-        background: #e3f2fd;
-        color: #4a7ba7;
-        border-color: #4a7ba7;
+        background: #d1baa3;
+        color: #5a4a38;
+        border-color: #5a4a38;
     }
 
     .hook-text {
