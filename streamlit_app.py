@@ -847,6 +847,33 @@ def main():
             st.info("No activity yet...")
 
     # Main content area
+    # Header box with title and subtitle
+    st.markdown("""
+    <div style="
+        background: #ffffff;
+        border: 2px solid #2a2a2a;
+        border-radius: 30px;
+        padding: 2rem 2.5rem;
+        margin: 1rem 0 2rem 0;
+        box-shadow: 0 4px 0 #2a2a2a;
+    ">
+        <h1 style="
+            margin: 0 0 0.5rem 0;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #0a0a0a;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.03em;
+        ">LinkedIn Content Engine</h1>
+        <p style="
+            margin: 0;
+            font-size: 1rem;
+            color: #737373;
+            font-weight: 400;
+        ">AI-powered content generation with research & analytics</p>
+    </div>
+    """, unsafe_allow_html=True)
+
     if mode == "manual":
         st.markdown("## ✍️ Manual Input Mode")
         st.markdown("Test the workflow with custom input for rapid iteration")
