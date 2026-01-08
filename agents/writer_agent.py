@@ -364,7 +364,7 @@ Generate a compelling LinkedIn post following all guidelines above. Use the rese
             "topic": topic,
             "goal": goal,
             "context": context + strategy_context + feedback_context,
-            "research_brief": research_brief[:1500]  # Limit length
+            "research_brief": research_brief[:3000]  # Increased from 1500 for better context
         })
 
         # Parse JSON response

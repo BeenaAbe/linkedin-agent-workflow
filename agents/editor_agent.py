@@ -29,38 +29,38 @@ class EditorAgent:
     # Quality thresholds by content type
     QUALITY_THRESHOLDS = {
         "Thought Leadership": {
-            "min_chars": 800,
+            "min_chars": 1000,  # Increased from 800
             "max_chars": 1500,
             "min_line_breaks": 4,
             "min_quality_score": 75
         },
         "Product": {
-            "min_chars": 500,
+            "min_chars": 800,  # Increased from 500
             "max_chars": 1300,
             "min_line_breaks": 3,
             "min_quality_score": 70
         },
         "Educational": {
-            "min_chars": 400,
-            "max_chars": 1200,
+            "min_chars": 800,  # Increased from 400
+            "max_chars": 1300,  # Increased from 1200
             "min_line_breaks": 3,
             "min_quality_score": 75
         },
         "Personal Brand": {
-            "min_chars": 400,
-            "max_chars": 1000,
+            "min_chars": 700,  # Increased from 400
+            "max_chars": 1100,  # Increased from 1000
             "min_line_breaks": 4,
             "min_quality_score": 70
         },
         "Interactive": {
-            "min_chars": 200,
+            "min_chars": 200,  # Keep short for polls/questions
             "max_chars": 600,
             "min_line_breaks": 2,
             "min_quality_score": 65
         },
         "Inspirational": {
-            "min_chars": 400,
-            "max_chars": 1000,
+            "min_chars": 700,  # Increased from 400
+            "max_chars": 1100,  # Increased from 1000
             "min_line_breaks": 4,
             "min_quality_score": 70
         }
@@ -208,10 +208,17 @@ Please review this draft and provide your assessment.""")
             score -= 10
             feedback.append(f"Insufficient line breaks ({line_breaks}, need {thresholds['min_line_breaks']}+)")
 
-        # Check 3: Hooks
+        # Check 3: Hooks count
         if len(hooks) < 3:
             score -= 15
             feedback.append(f"Missing hooks (found {len(hooks)}, need 3)")
+
+        # Check 3b: Hook diversity (NEW)
+        if len(hooks) >= 3:
+            is_diverse, diversity_msg = self._check_hook_diversity(hooks)
+            if not is_diverse:
+                score -= 20
+                feedback.append(diversity_msg)
 
         # Check 4: CTA
         if not cta or len(cta) < 10:
@@ -270,6 +277,46 @@ Please review this draft and provide your assessment.""")
         except Exception as e:
             print(f"⚠️  Editor: LLM review failed: {e}")
             return "LLM review unavailable"
+
+    def _check_hook_diversity(self, hooks: list) -> tuple[bool, str]:
+        """Check if hooks use different formulas (Controversial, Question, Story)"""
+
+        if len(hooks) < 3:
+            return False, "Need 3 hooks"
+
+        # Patterns for each hook type
+        controversial_pattern = r"unpopular opinion|hot take|controversial|here'?s the truth|nobody talks about|most people get this wrong"
+        question_pattern = r"what if|why do|why does|how many|how often|ever wonder|have you noticed"
+        story_pattern = r"I \w+|Last \w+|Yesterday|A few \w+ ago|When I|My \w+ told|I used to"
+
+        # Check each hook
+        has_controversial = sum(1 for hook in hooks if re.search(controversial_pattern, hook, re.I))
+        has_question = sum(1 for hook in hooks if re.search(question_pattern, hook, re.I))
+        has_story = sum(1 for hook in hooks if re.search(story_pattern, hook, re.I))
+
+        # Count how many different types we found
+        types_found = []
+        if has_controversial > 0:
+            types_found.append("Controversial")
+        if has_question > 0:
+            types_found.append("Question")
+        if has_story > 0:
+            types_found.append("Story")
+
+        diversity_count = len(types_found)
+
+        if diversity_count < 3:
+            missing_types = []
+            if has_controversial == 0:
+                missing_types.append("Controversial")
+            if has_question == 0:
+                missing_types.append("Question")
+            if has_story == 0:
+                missing_types.append("Story")
+
+            return False, f"Hooks lack diversity - missing {', '.join(missing_types)} type(s). Need all 3 formula types."
+
+        return True, "Hook diversity verified"
 
     def _detect_jargon(self, text: str) -> list:
         """Detect forbidden corporate jargon"""
