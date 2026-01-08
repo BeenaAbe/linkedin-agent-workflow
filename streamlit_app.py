@@ -496,37 +496,52 @@ def calculate_quality_score(result):
 
 
 def create_character_gauge(char_count):
-    """Create a gauge chart for character count"""
+    """Create a clean, muted gauge chart for character count"""
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
         value=char_count,
         domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "Character Count", 'font': {'size': 20}},
-        delta={'reference': 1200, 'increasing': {'color': "#FF6B6B"}},
+        title={
+            'text': "Character Count",
+            'font': {'size': 18, 'family': 'Outfit, sans-serif', 'color': '#404040'}
+        },
+        delta={
+            'reference': 1200,
+            'increasing': {'color': "#8b6b6b"},
+            'font': {'size': 14, 'family': 'Outfit, sans-serif'}
+        },
+        number={
+            'font': {'size': 48, 'family': 'Outfit, sans-serif', 'color': '#0a0a0a'}
+        },
         gauge={
-            'axis': {'range': [None, 1500], 'tickwidth': 1, 'tickcolor': "darkblue"},
-            'bar': {'color': "#0077B5"},
-            'bgcolor': "white",
-            'borderwidth': 2,
-            'bordercolor': "gray",
+            'axis': {
+                'range': [None, 1500],
+                'tickwidth': 1,
+                'tickcolor': "#d4d4d2",
+                'tickfont': {'size': 11, 'color': '#737373', 'family': 'Outfit, sans-serif'}
+            },
+            'bar': {'color': "#0077B5", 'thickness': 0.7},
+            'bgcolor': "#fafafa",
+            'borderwidth': 1,
+            'bordercolor': "#e8e8e6",
             'steps': [
-                {'range': [0, 800], 'color': '#FFE5E5'},
-                {'range': [800, 1300], 'color': '#E5F5E5'},
-                {'range': [1300, 1500], 'color': '#FFF5E5'}
+                {'range': [0, 800], 'color': '#f5f3f3'},
+                {'range': [800, 1300], 'color': '#f3f5f3'},
+                {'range': [1300, 1500], 'color': '#f5f4f3'}
             ],
             'threshold': {
-                'line': {'color': "red", 'width': 4},
-                'thickness': 0.75,
+                'line': {'color': "#8b6b6b", 'width': 3},
+                'thickness': 0.7,
                 'value': 1400
             }
         }
     ))
 
     fig.update_layout(
-        height=250,
-        margin=dict(l=20, r=20, t=50, b=20),
+        height=280,
+        margin=dict(l=20, r=20, t=60, b=20),
         paper_bgcolor="rgba(0,0,0,0)",
-        font={'color': "#2C3E50", 'family': "Arial"}
+        font={'color': "#404040", 'family': "Outfit, sans-serif"}
     )
 
     return fig
