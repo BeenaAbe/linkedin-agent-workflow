@@ -845,7 +845,7 @@ def main():
     # Header box with title and subtitle
     st.markdown("""
     <div style="
-        background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 50%, #fff9c4 100%);
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
         border: 2px solid #2a2a2a;
         border-radius: 30px;
         padding: 2rem 2.5rem;
@@ -863,7 +863,7 @@ def main():
         <p style="
             margin: 0;
             font-size: 1rem;
-            color: #404040;
+            color: #1a1a1a;
             font-weight: 500;
         ">AI-powered content generation with research & analytics</p>
     </div>
