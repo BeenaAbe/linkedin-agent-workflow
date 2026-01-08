@@ -972,13 +972,10 @@ Leave empty to let the AI research independently.""",
             help="Automatically create a new page in your Notion database with the generated content"
         )
 
-        col1, col2, col3 = st.columns([2, 1, 1])
+        col1, col2 = st.columns([3, 1])
         with col1:
             generate_btn = st.button("🚀 Generate Post", type="primary", disabled=st.session_state.workflow_running, use_container_width=True)
         with col2:
-            if st.button("🎲 Random Example", use_container_width=True):
-                st.info("🚧 Coming soon!")
-        with col3:
             if st.session_state.results and st.button("💾 Save to Notion Now", use_container_width=True):
                 try:
                     with st.spinner("Saving to Notion..."):
