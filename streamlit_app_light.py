@@ -1,6 +1,6 @@
 """
-LinkedIn Content Engine - Sleek Dark Mode UI
-Professional dark theme with glassmorphism and LinkedIn-inspired accents
+LinkedIn Content Engine - Enhanced Streamlit Web Interface
+Production-grade UI with modern design and advanced features
 """
 
 import streamlit as st
@@ -34,339 +34,117 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Sleek Dark Mode CSS with Glassmorphism
+# Enhanced Custom CSS
 st.markdown("""
 <style>
-    /* Import modern font */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-    /* Global styles */
-    * {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    /* Main app background - dark with subtle gradient */
-    .stApp {
-        background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
-        background-attachment: fixed;
-    }
-
-    /* Sidebar styling */
-    [data-testid="stSidebar"] {
-        background: rgba(15, 20, 35, 0.95);
-        backdrop-filter: blur(10px);
-        border-right: 1px solid rgba(0, 119, 181, 0.1);
-    }
-
-    /* Main content area */
-    .main .block-container {
-        padding-top: 2rem;
-        max-width: 1200px;
-    }
-
-    /* Header with animated LinkedIn gradient */
+    /* Main header with LinkedIn gradient */
     .main-header {
         font-size: 3.5rem;
         font-weight: 800;
         text-align: center;
-        padding: 2rem 0 1rem 0;
-        background: linear-gradient(135deg, #0077B5 0%, #00A0DC 30%, #0077B5 60%, #00A0DC 100%);
+        padding: 1.5rem 0;
+        background: linear-gradient(135deg, #0077B5 0%, #00A0DC 50%, #0077B5 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        background-size: 300% 300%;
-        animation: gradient-shift 8s ease infinite;
-        letter-spacing: -2px;
+        background-size: 200% 200%;
+        animation: gradient 3s ease infinite;
     }
 
-    @keyframes gradient-shift {
-        0%, 100% { background-position: 0% 50%; }
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
 
-    .subtitle {
-        text-align: center;
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 1.1rem;
-        margin-top: -1rem;
-        margin-bottom: 2rem;
-        font-weight: 400;
-        letter-spacing: 0.5px;
-    }
-
-    /* Glassmorphism cards */
-    .glass-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .glass-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 48px rgba(0, 119, 181, 0.2);
-        border-color: rgba(0, 119, 181, 0.3);
-    }
-
-    /* Hook cards with glassmorphism */
+    /* Hook cards */
     .hook-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(20px);
-        padding: 1.8rem;
-        border-radius: 16px;
-        border-left: 4px solid #0077B5;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        margin: 1.2rem 0;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .hook-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(0, 119, 181, 0.1) 0%, transparent 100%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .hook-card:hover::before {
-        opacity: 1;
+        background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 5px solid #0077B5;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 1rem 0;
+        transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .hook-card:hover {
-        transform: translateX(8px);
-        border-left-color: #00A0DC;
-        box-shadow: 0 12px 48px rgba(0, 160, 220, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 119, 181, 0.15);
     }
 
     .hook-type-badge {
         display: inline-block;
-        padding: 0.4rem 1rem;
+        padding: 0.3rem 0.8rem;
         border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.8rem;
     }
 
     .badge-controversial {
         background: linear-gradient(135deg, #FF6B6B, #FF8E53);
         color: white;
-        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
     }
 
     .badge-question {
         background: linear-gradient(135deg, #4ECDC4, #44A08D);
         color: white;
-        box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
     }
 
     .badge-story {
         background: linear-gradient(135deg, #A8E6CF, #56AB91);
         color: white;
-        box-shadow: 0 4px 12px rgba(168, 230, 207, 0.3);
     }
 
     .hook-text {
-        font-size: 1.15rem;
-        line-height: 1.7;
-        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #2C3E50;
         font-weight: 500;
     }
 
     .char-count {
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.5);
-        margin-top: 0.8rem;
-        font-weight: 500;
+        font-size: 0.9rem;
+        color: #7F8C8D;
+        margin-top: 0.5rem;
     }
 
-    /* Metrics with glow effect */
+    /* Metrics */
     .metric-card {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(102, 126, 234, 0.3);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        padding: 2rem;
-        border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .metric-card::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(0, 119, 181, 0.1) 0%, transparent 70%);
-        animation: pulse 3s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.1); opacity: 0.8; }
     }
 
     .metric-value {
-        font-size: 2.8rem;
+        font-size: 2.5rem;
         font-weight: 800;
         margin: 0.5rem 0;
-        background: linear-gradient(135deg, #00A0DC, #0077B5);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
     }
 
     .metric-label {
-        font-size: 0.85rem;
-        opacity: 0.8;
+        font-size: 0.9rem;
+        opacity: 0.9;
         text-transform: uppercase;
-        letter-spacing: 1.5px;
-        font-weight: 600;
+        letter-spacing: 1px;
     }
 
-    /* Status boxes with dark theme */
-    .status-box {
-        padding: 1.2rem 1.8rem;
-        border-radius: 12px;
-        margin: 1rem 0;
-        border-left: 4px solid;
-        backdrop-filter: blur(20px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    }
-
-    .success-box {
-        background: rgba(40, 167, 69, 0.15);
-        border-left-color: #28a745;
-        color: #4ade80;
-    }
-
-    .error-box {
-        background: rgba(220, 53, 69, 0.15);
-        border-left-color: #dc3545;
-        color: #fb7185;
-    }
-
-    .warning-box {
-        background: rgba(255, 193, 7, 0.15);
-        border-left-color: #ffc107;
-        color: #fbbf24;
-    }
-
-    .info-box {
-        background: rgba(23, 162, 184, 0.15);
-        border-left-color: #17a2b8;
-        color: #38bdf8;
-    }
-
-    /* LinkedIn preview with dark theme */
-    .linkedin-preview {
-        background: rgba(30, 35, 50, 0.8);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        padding: 2rem;
-        max-width: 650px;
-        margin: 1.5rem auto;
-        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
-    }
-
-    .linkedin-preview-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1.2rem;
-    }
-
-    .linkedin-avatar {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #0077B5, #00A0DC);
-        margin-right: 14px;
-        box-shadow: 0 4px 12px rgba(0, 119, 181, 0.4);
-    }
-
-    .linkedin-preview-content {
-        font-size: 1rem;
-        line-height: 1.7;
-        color: rgba(255, 255, 255, 0.9);
-        white-space: pre-wrap;
-    }
-
-    /* Queue card with glassmorphism */
-    .queue-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 1.2rem;
-        margin: 0.8rem 0;
-        transition: all 0.3s ease;
-    }
-
-    .queue-card:hover {
-        border-color: rgba(0, 119, 181, 0.5);
-        box-shadow: 0 8px 32px rgba(0, 119, 181, 0.2);
-        transform: translateX(4px);
-    }
-
-    /* Button styling */
-    .stButton>button {
-        border-radius: 10px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 119, 181, 0.3);
-        background: rgba(0, 119, 181, 0.1);
-        color: #00A0DC;
-        backdrop-filter: blur(10px);
-    }
-
-    .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0, 119, 181, 0.4);
-        background: rgba(0, 119, 181, 0.2);
-        border-color: #0077B5;
-    }
-
-    .stButton>button[kind="primary"] {
-        background: linear-gradient(135deg, #0077B5, #00A0DC);
-        color: white;
-        border: none;
-        box-shadow: 0 4px 16px rgba(0, 119, 181, 0.3);
-    }
-
-    .stButton>button[kind="primary"]:hover {
-        background: linear-gradient(135deg, #00A0DC, #0077B5);
-        box-shadow: 0 8px 32px rgba(0, 160, 220, 0.5);
-    }
-
-    /* Progress container */
+    /* Progress indicators */
     .progress-container {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        padding: 1.8rem;
-        margin: 1.5rem 0;
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1rem 0;
     }
 
     .progress-step {
         display: flex;
         align-items: center;
-        padding: 1rem 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #e9ecef;
     }
 
     .progress-step:last-child {
@@ -374,126 +152,123 @@ st.markdown("""
     }
 
     .progress-icon {
-        font-size: 1.8rem;
-        margin-right: 1.2rem;
+        font-size: 1.5rem;
+        margin-right: 1rem;
     }
 
     .progress-text {
         flex: 1;
         font-size: 1rem;
-        color: rgba(255, 255, 255, 0.8);
+        color: #495057;
     }
 
-    /* Text inputs and text areas */
-    .stTextInput>div>div>input,
-    .stTextArea>div>div>textarea,
-    .stSelectbox>div>div>select {
-        background: rgba(255, 255, 255, 0.05) !important;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 10px;
-        color: rgba(255, 255, 255, 0.9) !important;
-        transition: all 0.3s ease;
-    }
-
-    .stTextInput>div>div>input:focus,
-    .stTextArea>div>div>textarea:focus {
-        border-color: rgba(0, 119, 181, 0.5) !important;
-        box-shadow: 0 0 0 2px rgba(0, 119, 181, 0.2) !important;
-    }
-
-    /* Tabs styling */
-    .stTabs [data-baseweb="tab-list"] {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
+    /* Status boxes */
+    .status-box {
+        padding: 1rem 1.5rem;
         border-radius: 12px;
-        padding: 0.5rem;
+        margin: 1rem 0;
+        border-left: 5px solid;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .stTabs [data-baseweb="tab"] {
-        color: rgba(255, 255, 255, 0.6);
-        font-weight: 600;
-        border-radius: 8px;
+    .success-box {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border-left-color: #28a745;
+        color: #155724;
     }
 
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(0, 119, 181, 0.3), rgba(0, 160, 220, 0.3));
-        color: white;
+    .error-box {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        border-left-color: #dc3545;
+        color: #721c24;
     }
 
-    /* Metrics from Streamlit */
-    [data-testid="stMetricValue"] {
-        font-size: 2.2rem;
-        font-weight: 800;
-        color: #00A0DC;
+    .warning-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border-left-color: #ffc107;
+        color: #856404;
     }
 
-    [data-testid="stMetricLabel"] {
-        color: rgba(255, 255, 255, 0.7);
-        font-weight: 600;
+    .info-box {
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        border-left-color: #17a2b8;
+        color: #0c5460;
     }
 
-    /* Expander */
-    .streamlit-expanderHeader {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        color: rgba(255, 255, 255, 0.9);
+    /* LinkedIn preview */
+    .linkedin-preview {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        max-width: 600px;
+        margin: 1rem auto;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
-    /* Code blocks */
-    code {
-        background: rgba(255, 255, 255, 0.05) !important;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: #00A0DC !important;
+    .linkedin-preview-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
     }
 
-    /* Divider */
-    hr {
-        border-color: rgba(255, 255, 255, 0.1);
-        margin: 2rem 0;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.02);
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: rgba(0, 119, 181, 0.3);
-        border-radius: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 119, 181, 0.5);
-    }
-
-    /* Glow effect on hover for interactive elements */
-    .glow-on-hover {
-        position: relative;
-    }
-
-    .glow-on-hover::after {
-        content: '';
-        position: absolute;
-        inset: -2px;
-        border-radius: inherit;
+    .linkedin-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
         background: linear-gradient(135deg, #0077B5, #00A0DC);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: -1;
-        filter: blur(10px);
+        margin-right: 12px;
     }
 
-    .glow-on-hover:hover::after {
-        opacity: 0.7;
+    .linkedin-preview-content {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: rgba(0, 0, 0, 0.9);
+        white-space: pre-wrap;
+    }
+
+    /* Queue card */
+    .queue-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        transition: all 0.3s;
+    }
+
+    .queue-card:hover {
+        border-color: #0077B5;
+        box-shadow: 0 4px 8px rgba(0, 119, 181, 0.1);
+    }
+
+    /* Button enhancements */
+    .stButton>button {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 119, 181, 0.3);
+    }
+
+    /* Copy button */
+    .copy-btn {
+        background: linear-gradient(135deg, #0077B5, #00A0DC);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .copy-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 119, 181, 0.4);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -591,26 +366,26 @@ def calculate_quality_score(result):
 
 
 def create_character_gauge(char_count):
-    """Create a dark-themed gauge chart for character count"""
+    """Create a gauge chart for character count"""
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
         value=char_count,
         domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "Character Count", 'font': {'size': 20, 'color': 'rgba(255,255,255,0.8)'}},
+        title={'text': "Character Count", 'font': {'size': 20}},
         delta={'reference': 1200, 'increasing': {'color': "#FF6B6B"}},
         gauge={
-            'axis': {'range': [None, 1500], 'tickwidth': 1, 'tickcolor': "rgba(255,255,255,0.3)"},
+            'axis': {'range': [None, 1500], 'tickwidth': 1, 'tickcolor': "darkblue"},
             'bar': {'color': "#0077B5"},
-            'bgcolor': "rgba(255,255,255,0.05)",
+            'bgcolor': "white",
             'borderwidth': 2,
-            'bordercolor': "rgba(255,255,255,0.1)",
+            'bordercolor': "gray",
             'steps': [
-                {'range': [0, 800], 'color': 'rgba(255, 107, 107, 0.2)'},
-                {'range': [800, 1300], 'color': 'rgba(40, 167, 69, 0.2)'},
-                {'range': [1300, 1500], 'color': 'rgba(255, 193, 7, 0.2)'}
+                {'range': [0, 800], 'color': '#FFE5E5'},
+                {'range': [800, 1300], 'color': '#E5F5E5'},
+                {'range': [1300, 1500], 'color': '#FFF5E5'}
             ],
             'threshold': {
-                'line': {'color': "#FF6B6B", 'width': 4},
+                'line': {'color': "red", 'width': 4},
                 'thickness': 0.75,
                 'value': 1400
             }
@@ -618,18 +393,17 @@ def create_character_gauge(char_count):
     ))
 
     fig.update_layout(
-        height=280,
-        margin=dict(l=20, r=20, t=60, b=20),
+        height=250,
+        margin=dict(l=20, r=20, t=50, b=20),
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font={'color': "rgba(255,255,255,0.8)", 'family': "Inter, sans-serif"}
+        font={'color': "#2C3E50", 'family': "Arial"}
     )
 
     return fig
 
 
 def render_hook_card(hook, index):
-    """Render a beautiful hook card with dark glassmorphism"""
+    """Render a beautiful hook card"""
     hook_type, hook_label = get_hook_type(index)
     char_count = len(hook)
 
@@ -661,14 +435,14 @@ def render_hook_card(hook, index):
 
 
 def render_linkedin_preview(post_body, hooks):
-    """Render LinkedIn dark mode preview"""
+    """Render LinkedIn mobile preview"""
     preview_html = f"""
     <div class="linkedin-preview">
         <div class="linkedin-preview-header">
             <div class="linkedin-avatar"></div>
             <div>
-                <div style="font-weight: 600; font-size: 1rem; color: rgba(255,255,255,0.95);">Your Name</div>
-                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.5);">Your Title • Just now • 🌐</div>
+                <div style="font-weight: 600; font-size: 0.95rem;">Your Name</div>
+                <div style="font-size: 0.8rem; color: #666;">Your Title • Just now • 🌐</div>
             </div>
         </div>
         <div class="linkedin-preview-content">{hooks[0] if hooks else ''}\n\n{post_body[:300]}{'...' if len(post_body) > 300 else ''}</div>
@@ -741,7 +515,7 @@ def main():
 
     # Header
     st.markdown('<div class="main-header">🚀 LinkedIn Content Engine</div>', unsafe_allow_html=True)
-    st.markdown("<p class='subtitle'>AI-Powered Content Generation with Research & Analytics</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #7F8C8D; font-size: 1.1rem; margin-top: -1rem;'>AI-Powered Content Generation with Research & Analytics</p>", unsafe_allow_html=True)
     st.markdown("---")
 
     # Check environment variables
@@ -794,11 +568,10 @@ def main():
 
         # Display logs in a scrollable container
         if st.session_state.logs:
-            log_html = "<div style='height: 300px; overflow-y: auto; font-size: 0.85rem; background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);'>"
+            log_html = "<div style='height: 300px; overflow-y: auto; font-size: 0.85rem; background: #f8f9fa; padding: 0.5rem; border-radius: 8px;'>"
             for log in st.session_state.logs[-20:]:
                 icon = "ℹ️" if log["level"] == "info" else "✅" if log["level"] == "success" else "❌"
-                color = "rgba(255,255,255,0.7)" if log["level"] == "info" else "#4ade80" if log["level"] == "success" else "#fb7185"
-                log_html += f"<div style='margin: 0.4rem 0; color: {color};'><code style='background: rgba(255,255,255,0.05); padding: 0.2rem 0.4rem; border-radius: 4px;'>{log['time']}</code> {icon} {log['message']}</div>"
+                log_html += f"<div style='margin: 0.3rem 0;'><code>{log['time']}</code> {icon} {log['message']}</div>"
             log_html += "</div>"
             st.markdown(log_html, unsafe_allow_html=True)
         else:
@@ -979,12 +752,12 @@ Leave empty to let the AI research independently.""",
 
                     with col2:
                         # Style based on selection
-                        card_style = "border: 2px solid #00A0DC; background: rgba(0, 160, 220, 0.1); box-shadow: 0 8px 32px rgba(0, 160, 220, 0.3);" if is_selected else ""
+                        card_style = "border: 3px solid #0077B5; background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);" if is_selected else ""
                         st.markdown(f"""
                         <div class="queue-card" style="{card_style}">
-                            <strong style="color: rgba(255,255,255,0.95); font-size: 1.05rem;">{idx + 1}. {idea['topic']}</strong><br>
-                            <small style="color: rgba(255,255,255,0.6);">🎯 Goal: {idea['goal']}</small>
-                            {f"<br><small style='color: rgba(255,255,255,0.5);'>📝 {idea.get('context', '')[:100]}...</small>" if idea.get('context') else ''}
+                            <strong>{idx + 1}. {idea['topic']}</strong><br>
+                            <small>🎯 Goal: {idea['goal']}</small>
+                            {f"<br><small>📝 {idea.get('context', '')[:100]}...</small>" if idea.get('context') else ''}
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -1410,36 +1183,36 @@ Leave empty to let the AI research independently.""",
                 st.markdown("#### 🔄 Agent Pipeline")
 
                 pipeline_html = """
-                <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); padding: 2rem; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+                <div style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 1.5rem; border-radius: 12px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
                         <div style="text-align: center; margin: 0.5rem;">
-                            <div style="background: linear-gradient(135deg, #0077B5, #00A0DC); color: white; padding: 1rem; border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.8rem; box-shadow: 0 8px 24px rgba(0, 119, 181, 0.4);">🔍</div>
-                            <div style="margin-top: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.9);">Admin</div>
+                            <div style="background: #0077B5; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">🔍</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Admin</div>
                         </div>
-                        <div style="color: rgba(0, 160, 220, 0.6); font-size: 2rem;">→</div>
+                        <div style="color: #0077B5; font-size: 1.5rem;">→</div>
                         <div style="text-align: center; margin: 0.5rem;">
-                            <div style="background: linear-gradient(135deg, #00A0DC, #0077B5); color: white; padding: 1rem; border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.8rem; box-shadow: 0 8px 24px rgba(0, 160, 220, 0.4);">📚</div>
-                            <div style="margin-top: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.9);">Research</div>
+                            <div style="background: #00A0DC; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">📚</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Research</div>
                         </div>
-                        <div style="color: rgba(0, 160, 220, 0.6); font-size: 2rem;">→</div>
+                        <div style="color: #0077B5; font-size: 1.5rem;">→</div>
                         <div style="text-align: center; margin: 0.5rem;">
-                            <div style="background: linear-gradient(135deg, #0077B5, #00A0DC); color: white; padding: 1rem; border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.8rem; box-shadow: 0 8px 24px rgba(0, 119, 181, 0.4);">🎯</div>
-                            <div style="margin-top: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.9);">Strategist</div>
+                            <div style="background: #0077B5; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">🎯</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Strategist</div>
                         </div>
-                        <div style="color: rgba(0, 160, 220, 0.6); font-size: 2rem;">→</div>
+                        <div style="color: #0077B5; font-size: 1.5rem;">→</div>
                         <div style="text-align: center; margin: 0.5rem;">
-                            <div style="background: linear-gradient(135deg, #00A0DC, #0077B5); color: white; padding: 1rem; border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.8rem; box-shadow: 0 8px 24px rgba(0, 160, 220, 0.4);">✍️</div>
-                            <div style="margin-top: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.9);">Writer</div>
+                            <div style="background: #00A0DC; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">✍️</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Writer</div>
                         </div>
-                        <div style="color: rgba(0, 160, 220, 0.6); font-size: 2rem;">→</div>
+                        <div style="color: #0077B5; font-size: 1.5rem;">→</div>
                         <div style="text-align: center; margin: 0.5rem;">
-                            <div style="background: linear-gradient(135deg, #0077B5, #00A0DC); color: white; padding: 1rem; border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.8rem; box-shadow: 0 8px 24px rgba(0, 119, 181, 0.4);">📝</div>
-                            <div style="margin-top: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.9);">Editor</div>
+                            <div style="background: #0077B5; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">📝</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Editor</div>
                         </div>
-                        <div style="color: rgba(0, 160, 220, 0.6); font-size: 2rem;">→</div>
+                        <div style="color: #0077B5; font-size: 1.5rem;">→</div>
                         <div style="text-align: center; margin: 0.5rem;">
-                            <div style="background: linear-gradient(135deg, #00A0DC, #0077B5); color: white; padding: 1rem; border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.8rem; box-shadow: 0 8px 24px rgba(0, 160, 220, 0.4);">✨</div>
-                            <div style="margin-top: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.9);">Formatter</div>
+                            <div style="background: #00A0DC; color: white; padding: 1rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.5rem;">✨</div>
+                            <div style="margin-top: 0.5rem; font-weight: 600;">Formatter</div>
                         </div>
                     </div>
                 </div>
