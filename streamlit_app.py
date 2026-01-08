@@ -60,23 +60,23 @@ st.markdown("""
 
     /* Main header - clean, bold, minimal */
     .main-header {
-        font-size: 3.8rem;
-        font-weight: 700;
+        font-size: 4rem;
+        font-weight: 800;
         text-align: center;
-        padding: 1rem 0 0.5rem 0;
+        padding: 1.5rem 0 0.5rem 0;
         color: #0a0a0a;
-        letter-spacing: -0.03em;
-        line-height: 1.1;
+        letter-spacing: -0.04em;
+        line-height: 1;
     }
 
     .subtitle {
         text-align: center;
-        color: #666;
-        font-size: 1.05rem;
-        margin-top: 0.5rem;
-        margin-bottom: 3rem;
+        color: #737373;
+        font-size: 1.1rem;
+        margin-top: 0.8rem;
+        margin-bottom: 3.5rem;
         font-weight: 400;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.005em;
     }
 
     /* LinkedIn accent color */
