@@ -84,20 +84,21 @@ st.markdown("""
         color: #0077B5;
     }
 
-    /* Hook cards - Clean, minimal style */
+    /* Hook cards - Muted color backgrounds */
     .hook-card {
-        background: #ffffff;
+        background: #f8f8f7;
         padding: 2rem;
         border-radius: 12px;
-        border: 1px solid #e5e5e5;
+        border: 1px solid #e8e8e6;
         margin: 1.5rem 0;
         transition: all 0.2s ease;
         position: relative;
     }
 
     .hook-card:hover {
-        border-color: #0077B5;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        background: #f3f3f1;
+        border-color: #d4d4d2;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
     }
 
     .hook-type-badge {
@@ -112,21 +113,21 @@ st.markdown("""
     }
 
     .badge-controversial {
-        background: #fff0f0;
-        color: #d63031;
-        border: 1px solid #ffe5e5;
+        background: #f5f3f3;
+        color: #8b6b6b;
+        border: 1px solid #e5e0e0;
     }
 
     .badge-question {
-        background: #f0f9ff;
-        color: #0077B5;
-        border: 1px solid #e0f2fe;
+        background: #f3f5f5;
+        color: #6b7b8b;
+        border: 1px solid #e0e5e8;
     }
 
     .badge-story {
-        background: #f0fdf4;
-        color: #16a34a;
-        border: 1px solid #dcfce7;
+        background: #f3f5f3;
+        color: #6b8b6b;
+        border: 1px solid #e0e8e0;
     }
 
     .hook-text {
@@ -166,10 +167,10 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    /* Progress indicators - Clean style */
+    /* Progress indicators - Muted style */
     .progress-container {
-        background: #ffffff;
-        border: 1px solid #e5e5e5;
+        background: #f8f8f7;
+        border: 1px solid #e8e8e6;
         border-radius: 12px;
         padding: 2rem;
         margin: 1.5rem 0;
@@ -197,7 +198,7 @@ st.markdown("""
         color: #404040;
     }
 
-    /* Status boxes - Minimal clean design */
+    /* Status boxes - Muted design */
     .status-box {
         padding: 1rem 1.5rem;
         border-radius: 8px;
@@ -206,38 +207,38 @@ st.markdown("""
     }
 
     .success-box {
-        background: #f0fdf4;
-        border-color: #bbf7d0;
-        color: #166534;
+        background: #f3f5f3;
+        border-color: #d8e3d8;
+        color: #5a7a5a;
     }
 
     .error-box {
-        background: #fef2f2;
-        border-color: #fecaca;
-        color: #991b1b;
+        background: #f5f3f3;
+        border-color: #e3d8d8;
+        color: #8b6b6b;
     }
 
     .warning-box {
-        background: #fffbeb;
-        border-color: #fde68a;
-        color: #92400e;
+        background: #f5f4f3;
+        border-color: #e5dfd0;
+        color: #8b7d5a;
     }
 
     .info-box {
-        background: #eff6ff;
-        border-color: #bfdbfe;
-        color: #1e40af;
+        background: #f3f5f5;
+        border-color: #d8e0e5;
+        color: #5a6b7a;
     }
 
-    /* LinkedIn preview - Clean minimal card */
+    /* LinkedIn preview - Muted card */
     .linkedin-preview {
-        background: #ffffff;
-        border: 1px solid #e5e5e5;
+        background: #f8f8f7;
+        border: 1px solid #e8e8e6;
         border-radius: 12px;
         padding: 2rem;
         max-width: 650px;
         margin: 1.5rem auto;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
     }
 
     .linkedin-preview-header {
@@ -261,10 +262,10 @@ st.markdown("""
         white-space: pre-wrap;
     }
 
-    /* Queue card - Clean minimal style */
+    /* Queue card - Muted style */
     .queue-card {
-        background: #ffffff;
-        border: 1px solid #e5e5e5;
+        background: #f8f8f7;
+        border: 1px solid #e8e8e6;
         border-radius: 10px;
         padding: 1.2rem;
         margin: 0.8rem 0;
@@ -272,8 +273,9 @@ st.markdown("""
     }
 
     .queue-card:hover {
-        border-color: #0077B5;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        background: #f3f3f1;
+        border-color: #d4d4d2;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     }
 
     /* Button styling - Clean and minimal */
