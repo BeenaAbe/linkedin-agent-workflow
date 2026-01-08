@@ -307,7 +307,7 @@ st.markdown("""
 
     /* Sidebar styling */
     [data-testid="stSidebar"] {
-        background: #ffffff;
+        background: #fafafa;
         border-right: 1px solid #e5e5e5;
     }
 
@@ -316,6 +316,20 @@ st.markdown("""
         font-size: 1.1rem;
         color: #171717;
         letter-spacing: -0.01em;
+    }
+
+    [data-testid="stSidebar"] h3 {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #404040;
+        letter-spacing: -0.01em;
+    }
+
+    /* Sidebar success boxes - Muted style */
+    [data-testid="stSidebar"] .stAlert {
+        background: #f3f5f3 !important;
+        border: 1px solid #d8e3d8 !important;
+        color: #5a7a5a !important;
     }
 
     /* Input fields - Clean styling */
