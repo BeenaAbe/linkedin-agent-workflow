@@ -251,20 +251,145 @@ class FormatterAgent:
         return state.get("topic", "Your key insight here")
 
     def _create_generation_prompt(self, goal: str, state: Dict[str, Any]) -> str:
-        """Create DALL-E/Midjourney prompt for visual generation"""
+        """Create detailed AI image generation prompt for DALL-E/Midjourney/Stable Diffusion
+
+        This generates a comprehensive prompt that includes:
+        - Visual style and composition
+        - Color palette and mood
+        - Typography and design elements
+        - Technical specifications
+        - Quality modifiers for better AI output
+        """
 
         topic = state.get("topic", "business topic")
+        hooks = state.get("hooks", [""])
+        hook_preview = hooks[0][:100] if hooks else ""
 
         prompts = {
-            "Thought Leadership": f"Professional, minimalist design for '{topic}' carousel. Clean typography, corporate blue and white color scheme, modern iconography, 1:1 aspect ratio",
-            "Product": f"Clean product screenshot or demo for '{topic}'. Modern UI, bright interface, clear annotations, professional lighting, 1:1 or 4:5 aspect ratio",
-            "Personal Brand": f"Candid, authentic photo related to '{topic}'. Natural lighting, behind-the-scenes feel, professional but approachable, 4:5 aspect ratio",
-            "Educational": f"Infographic style for '{topic}'. Step-by-step visual guide, numbered sections, clean icons, easy to scan, 1:1 aspect ratio",
-            "Interactive": f"Bold quote card for '{topic}'. Large text, contrarian statement, textured background, eye-catching typography, 1:1 aspect ratio",
-            "Inspirational": f"Motivational quote card for '{topic}'. Inspiring imagery, elegant typography, warm colors, hopeful tone, 1:1 aspect ratio"
+            "Thought Leadership": (
+                f"Create a professional LinkedIn carousel cover slide about '{topic}'. "
+                f"VISUAL STYLE: Clean, modern, minimalist corporate design. "
+                f"LAYOUT: Centered composition with clear hierarchy. Large, bold sans-serif heading text at top third. "
+                f"Subtle geometric patterns or abstract shapes in background (lines, gradients, or soft shapes). "
+                f"COLOR PALETTE: Professional blues (#0077B5 LinkedIn blue, #00A0DC light blue) with white/off-white (#F3F6F8) background. "
+                f"Accent colors: Navy blue (#004182) for depth, light gray (#E1E9EE) for subtle elements. "
+                f"TYPOGRAPHY: Modern sans-serif font (Helvetica, Inter, or similar). Title in 72-96pt bold, subtitle in 36-48pt regular. "
+                f"ELEMENTS: Minimal iconography related to {topic} - max 1-2 simple line icons. Thin divider lines or subtle frames. "
+                f"MOOD: Authoritative, trustworthy, professional, forward-thinking. "
+                f"TECHNICAL: 1080x1080px, 1:1 aspect ratio, high contrast for mobile readability, 20% margin on all sides. "
+                f"STYLE KEYWORDS: Corporate, B2B, executive, thought leader, professional photography aesthetic, clean UI design, "
+                f"Behance quality, dribbble inspiration. "
+                f"AVOID: Cheesy stock photos, cluttered layouts, too many colors, Comic Sans or decorative fonts."
+            ),
+
+            "Product": (
+                f"Create a professional product showcase image for '{topic}'. "
+                f"VISUAL STYLE: Modern SaaS interface design, clean product demo aesthetic. "
+                f"LAYOUT: Center the main product interface/feature. Use 3D perspective or subtle shadow for depth. "
+                f"Include annotation arrows or callout boxes highlighting key features (max 2-3 annotations). "
+                f"COLOR PALETTE: Bright, vibrant interface colors - primary brand color (suggest #667EEA purple or #48BB78 green), "
+                f"white background (#FFFFFF), subtle gray UI elements (#F7FAFC, #E2E8F0). Use high contrast for CTAs. "
+                f"TYPOGRAPHY: Modern product UI font (SF Pro, Roboto, Inter). Labels in 24-32pt, annotations in 18-24pt. "
+                f"ELEMENTS: Product screenshot or mockup, UI elements (buttons, inputs, cards), subtle drop shadows, "
+                f"glowing highlights on key features, cursor hover states, smooth rounded corners (8-16px radius). "
+                f"MOOD: Exciting, innovative, user-friendly, 'aha moment' feeling. "
+                f"TECHNICAL: 1080x1350px (4:5 ratio) or 1080x1080px (1:1), crisp rendering, high DPI (2x resolution), "
+                f"clear visual hierarchy. "
+                f"STYLE KEYWORDS: Product Hunt featured, ProductLed aesthetic, B2B SaaS, modern web app, "
+                f"iOS/Material Design inspired, glass morphism effects, micro-interactions suggested. "
+                f"AVOID: Outdated UI patterns, low contrast text, overly complex interfaces, generic stock photos."
+            ),
+
+            "Personal Brand": (
+                f"Create an authentic, professional photo related to '{topic}'. "
+                f"VISUAL STYLE: Candid documentary photography, natural and approachable, behind-the-scenes authenticity. "
+                f"COMPOSITION: Rule of thirds, subject in natural environment (office, coffee shop, workspace, outdoor professional setting). "
+                f"Environmental context that tells a story about {topic}. Shallow depth of field (f/2.8-f/4) with subject in focus. "
+                f"LIGHTING: Natural window light or soft golden hour lighting. Avoid harsh shadows. "
+                f"Warm, inviting tone with slight backlight for dimension. "
+                f"COLOR PALETTE: Natural, warm tones - golden hour warmth, earth tones, authentic environment colors. "
+                f"Slightly desaturated for professional feel but not black & white. "
+                f"SUBJECT: Professional but casual attire, genuine expression (thoughtful, engaged, or mid-action), "
+                f"authentic moment not posed headshot. "
+                f"MOOD: Approachable, authentic, relatable, human, trustworthy, inspirational without being cheesy. "
+                f"TECHNICAL: 1080x1350px (4:5 portrait ratio), high quality portrait photography, slight film grain for authenticity. "
+                f"STYLE KEYWORDS: Brandon Stanton humans of style, documentary photography, environmental portrait, "
+                f"Gary Vee authenticity, lifestyle business photography, Forbes contributor aesthetic. "
+                f"AVOID: Corporate headshot, overly posed, fake office stock photos, cheesy hand gestures, clipart style."
+            ),
+
+            "Educational": (
+                f"Create an educational infographic about '{topic}'. "
+                f"VISUAL STYLE: Clear, scannable, step-by-step visual guide with strong information hierarchy. "
+                f"LAYOUT: Vertical or grid layout with numbered sections (3-5 steps max). Each section has icon + title + brief text. "
+                f"Left-aligned or centered alignment for easy reading. Clear visual flow with arrows or connecting elements. "
+                f"COLOR PALETTE: Educational and approachable - primary color (suggest #3182CE blue or #38B2AC teal), "
+                f"secondary accent (#F6AD55 orange), neutral background (#FAFAFA light gray), dark text (#2D3748). "
+                f"Use color coding for different sections/categories. "
+                f"TYPOGRAPHY: Highly legible sans-serif (Open Sans, Lato, Nunito). Headers 48-64pt bold, body text 24-32pt regular. "
+                f"Number badges in 36-48pt. Consistent spacing and alignment. "
+                f"ELEMENTS: Simple line icons (Feather, Heroicons style) for each step, numbered badges or circles, "
+                f"subtle divider lines, small charts or progress indicators, checkmarks or bullets for sub-points. "
+                f"MOOD: Friendly, accessible, confidence-building, 'you can do this' energy. "
+                f"TECHNICAL: 1080x1080px (1:1 square), high contrast for mobile, sufficient whitespace (40px+ margins), "
+                f"scalable text sizes. "
+                f"STYLE KEYWORDS: Venngage style, Canva educational template, Skillshare aesthetic, course material design, "
+                f"how-to guide, process visualization, explainer graphics. "
+                f"AVOID: Wall of text, too many elements, low contrast, decorative fonts, childish clipart."
+            ),
+
+            "Interactive": (
+                f"Create a bold, contrarian quote card for '{topic}'. "
+                f"CONTENT: Feature an engaging question or controversial statement related to '{topic}'. "
+                f"{'Use this hook: ' + hook_preview if hook_preview else 'Create a thought-provoking question that challenges common assumptions.'} "
+                f"VISUAL STYLE: Bold, conversation-starting, pattern interrupt design that stops the scroll. "
+                f"LAYOUT: Text-dominant design with question/statement taking 60-70% of space. Large, impactful typography. "
+                f"Quote marks optional. Author attribution minimal or absent. "
+                f"COLOR PALETTE: High contrast and bold - dark background (#1A202C charcoal or #2D3748 gray) with bright text, "
+                f"OR vibrant gradient background (suggest purple-pink, blue-green, or orange-red gradients). "
+                f"Accent color for emphasis (#F6E05E yellow, #FC8181 coral). "
+                f"TYPOGRAPHY: Extra bold, statement-making font (Montserrat Black, Bebas Neue, Poppins Bold). "
+                f"Main text 64-96pt, very thick weight (800-900). High contrast with background. "
+                f"TEXTURE: Subtle textured background (grainy, concrete, watercolor, or gradient noise), "
+                f"geometric patterns, or abstract shapes for visual interest. "
+                f"MOOD: Provocative, discussion-worthy, makes you stop and think, slightly edgy or contrarian. "
+                f"TECHNICAL: 1080x1080px (1:1 square), extremely high contrast for visibility, optimized for quick comprehension. "
+                f"STYLE KEYWORDS: Gary Vee quote card, controversial take, pattern interrupt, scroll-stopper, "
+                f"debate starter, LinkedIn poll aesthetic, discussion prompt. "
+                f"AVOID: Safe/bland statements, low contrast, too much text, decorative fonts, generic motivational vibes."
+            ),
+
+            "Inspirational": (
+                f"Create an inspiring quote card or motivational image for '{topic}'. "
+                f"VISUAL STYLE: Uplifting, aspirational, emotionally resonant with professional polish. "
+                f"LAYOUT: Centered quote text with elegant framing. Optional subtle imagery in background (nature, skyline, abstract). "
+                f"Text should be primary focus with background enhancing not competing. "
+                f"COLOR PALETTE: Warm and hopeful - sunrise oranges/golds (#F6AD55, #ED8936), calming blues (#4299E1), "
+                f"soft purples (#9F7AEA), or earthy greens (#48BB78). White or light overlay for text legibility. "
+                f"Gradient skies or soft bokeh effects. "
+                f"TYPOGRAPHY: Elegant serif for quotes (Playfair Display, Merriweather) or strong sans-serif (Montserrat, Raleway). "
+                f"Quote text 48-72pt, author attribution 24-32pt. Letter spacing for elegance. "
+                f"IMAGERY: If using background - mountain peaks, ocean horizons, city skylines, workspace victory moments, "
+                f"sunrise/sunset, abstract light rays, or textured overlays (watercolor, brush strokes). "
+                f"MOOD: Hopeful, empowering, growth-minded, vulnerable yet strong, inspiring without toxic positivity. "
+                f"TECHNICAL: 1080x1080px (1:1 square), text overlay with sufficient contrast (use dark overlay on bright images), "
+                f"high emotional impact. "
+                f"STYLE KEYWORDS: Brené Brown aesthetic, Simon Sinek inspiration, TED talk vibes, personal growth content, "
+                f"leadership development, authentic motivation, Jay Shetty visual style. "
+                f"AVOID: Cheesy sunset clichés, overused quotes, toxic positivity, generic corporate motivation, Comic Sans."
+            )
         }
 
-        return prompts.get(goal, prompts["Educational"])
+        base_prompt = prompts.get(goal, prompts["Educational"])
+
+        # Add quality enhancement suffix for all prompts
+        quality_suffix = (
+            " HIGH QUALITY RENDERING: Professional design, award-winning composition, trending on Dribbble/Behance, "
+            "print-ready resolution, polished and publication-ready, modern 2024-2025 design trends, "
+            "optimized for LinkedIn mobile and desktop feed."
+        )
+
+        return base_prompt + quality_suffix
 
     def _generate_first_comment(self, state: Dict[str, Any]) -> str:
         """Generate first comment (for external links)"""

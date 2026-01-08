@@ -1213,8 +1213,14 @@ Leave empty to let the AI research independently.""",
 
                                     # Slack notification
                                     if os.getenv("SLACK_WEBHOOK_URL"):
-                                        slack = SlackNotifier()
-                                        slack.send_draft_notification(result)
+                                        try:
+                                            add_log("📤 Sending Slack notification...", "info")
+                                            slack = SlackNotifier()
+                                            slack.send_draft_notification(result)
+                                            add_log("✅ Slack notification sent", "success")
+                                        except Exception as slack_error:
+                                            add_log(f"⚠️ Slack notification failed: {slack_error}", "error")
+                                            st.warning(f"Slack notification failed: {slack_error}")
 
                                     results_list.append(result)
                                     add_log(f"✅ Completed: {idea['topic']}", "success")
