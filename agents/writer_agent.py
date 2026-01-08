@@ -30,6 +30,11 @@ class WriterAgent:
 - Native media only (no YouTube links)
 - Hashtags: 3-5 relevant tags (mix broad + niche)
 
+**CRITICAL LENGTH REQUIREMENT:**
+⚠️ Post body must be 800-1,300 characters for most goal types
+⚠️ DO NOT write short posts under 800 characters (will be rejected)
+⚠️ Use the research brief data to add depth and substance
+
 **Structure Requirements:**
 - Short paragraphs: Maximum 2 sentences per paragraph
 - Frequent line breaks: Every 2-3 lines for mobile readability (use \\n\\n)
@@ -44,21 +49,36 @@ class WriterAgent:
 - NO corporate jargon: Avoid "synergy," "leverage," "circle back," "alignment"
 - NO humblebrag: Don't say "I'm humbled" or "grateful to announce"
 
-## Hook Formulas (Generate 3 Different Types)
+## Hook Formulas (CRITICAL - Generate 3 DIFFERENT Types)
 
-You MUST generate 3 hooks using these templates:
+⚠️ CRITICAL REQUIREMENT: All 3 hooks MUST use different formulas. Your output will be REJECTED if hooks are similar or repetitive.
 
-**1. Controversial Hook:**
-"Unpopular opinion: [bold claim that challenges consensus]"
+Generate EXACTLY ONE hook of each type:
+
+**1. CONTROVERSIAL Hook (Must include one of these phrases):**
+- "Unpopular opinion: [bold claim]"
+- "Hot take: [controversial statement]"
+- "Here's the truth: [challenge consensus]"
+- "Most people get this wrong: [correction]"
+
 Example: "Unpopular opinion: 83% of 'AI agents' are just chatbots cosplaying as intelligent systems."
 
-**2. Question Hook:**
-"What if [provocative hypothetical]?" OR "Why do [common behavior]?"
+**2. QUESTION Hook (Must start with a question):**
+- "What if [provocative hypothetical]?"
+- "Why do [common behavior]?"
+- "Have you ever wondered [intriguing question]?"
+- "How many [surprising statistic question]?"
+
 Example: "What if your best feature is the reason users are leaving?"
 
-**3. Story Hook:**
-"I [made a mistake/discovered something] that [surprising outcome]."
+**3. STORY Hook (Must use first-person narrative):**
+- "I [made a mistake/discovered] that [surprising outcome]"
+- "Last [time period], I [action] and [result]"
+- "When I [past action], [unexpected learning]"
+
 Example: "I spent $50k on a feature no one used. Here's what I learned."
+
+⚠️ DO NOT make all 3 hooks sound similar. Each must have a distinct structure and tone.
 
 ## Few-Shot Examples by Goal Type
 
@@ -290,16 +310,28 @@ Return ONLY valid JSON in this exact structure:
 
 ## Quality Checklist
 
-Before submitting:
-- All 3 hooks use different formulas (Controversial, Question, Story)
-- Post body is <1,500 characters
-- No external links in body
-- CTA matches the Goal
-- Line breaks every 2-3 sentences (\\\\n\\\\n)
-- 3-5 hashtags (relevant, not spammy)
-- Visual asset format matches Goal
-- No emoji (unless requested)
-- Active voice throughout
+⚠️ CRITICAL - Your output will be REJECTED and require revision if any of these fail:
+
+1. **Hook Diversity**: All 3 hooks MUST use DIFFERENT formulas:
+   - Hook 1: Controversial (with "Unpopular opinion" or similar)
+   - Hook 2: Question (starts with "What if", "Why", etc.)
+   - Hook 3: Story (first-person narrative with "I...")
+
+2. **Length**: Post body MUST be 800-1,300 characters (count carefully!)
+
+3. **Structure**: Line breaks every 2-3 sentences (use \\\\n\\\\n)
+
+4. **Content Quality**:
+   - Use specific data from research brief
+   - No generic statements
+   - No corporate jargon
+   - Active voice only
+
+5. **Format**:
+   - No external links in body
+   - 3-5 hashtags
+   - CTA matches Goal
+   - No emoji (unless requested)
 
 ## Important Notes
 
