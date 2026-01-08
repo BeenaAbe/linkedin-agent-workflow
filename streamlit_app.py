@@ -46,9 +46,9 @@ st.markdown("""
         letter-spacing: -0.01em;
     }
 
-    /* Main app background - muted warm off-white */
+    /* Main app background - muted orange */
     .stApp {
-        background: #f5f5f4;
+        background: #fff7ed;
     }
 
     /* Main container spacing */
