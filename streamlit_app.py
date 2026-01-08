@@ -8,7 +8,7 @@ import os
 import pyperclip
 import plotly.graph_objects as go
 from dotenv import load_dotenv
-from workflow import LinkedInWorkflow, AdaptiveLinkedInWorkflow, EnhancedLinkedInWorkflow
+from workflow import LinkedInWorkflow
 from integrations.notion_client import NotionClient
 from integrations.slack_notifier import SlackNotifier
 import time
@@ -492,23 +492,16 @@ def render_linkedin_preview(post_body, hooks):
     st.markdown(preview_html, unsafe_allow_html=True)
 
 
-def run_workflow(input_data, workflow_type="enhanced"):
-    """Run the workflow with progress tracking"""
+def run_workflow(input_data):
+    """Run the 6-agent workflow with progress tracking"""
     try:
         st.session_state.progress = []
         add_progress("🚀 Starting", "active", f"Topic: {input_data['topic']}")
         add_log(f"Starting workflow for: {input_data['topic']}", "info")
 
-        # Select workflow type
-        if workflow_type == "enhanced":
-            workflow = EnhancedLinkedInWorkflow()
-            add_log("Using Enhanced 6-Agent Workflow (Admin → Research → Strategist → Writer → Editor → Formatter)", "info")
-        elif workflow_type == "adaptive":
-            workflow = AdaptiveLinkedInWorkflow()
-            add_log("Using Adaptive Workflow (with quality checks)", "info")
-        else:
-            workflow = LinkedInWorkflow()
-            add_log("Using Simple Sequential Workflow", "info")
+        # Initialize the Enhanced 6-Agent Workflow
+        workflow = LinkedInWorkflow()
+        add_log("Using 6-Agent Workflow (Admin → Research → Strategist → Writer → Editor → Formatter)", "info")
 
         # Research phase
         add_progress("🔍 Research", "active", "Searching web sources...")
@@ -569,16 +562,6 @@ def main():
     # Sidebar
     with st.sidebar:
         st.markdown("## ⚙️ Configuration")
-
-        # Workflow type selection
-        workflow_type = st.radio(
-            "Workflow Type",
-            ["enhanced", "adaptive", "simple"],
-            format_func=lambda x: "🚀 Enhanced (6-Agent Pipeline)" if x == "enhanced" else "✨ Adaptive (Quality Checks)" if x == "adaptive" else "⚡ Simple Sequential",
-            help="Enhanced: Full 6-agent system with Admin, Strategist, Editor, Formatter\nAdaptive: Quality checks and self-correction\nSimple: Basic sequential workflow"
-        )
-
-        st.markdown("---")
 
         # Mode selection
         mode = st.radio(
@@ -702,7 +685,7 @@ Leave empty to let the AI research independently.""",
                     }
 
                     with st.spinner("🔮 Generating your LinkedIn post..."):
-                        result = run_workflow(input_data, workflow_type)
+                        result = run_workflow(input_data)
 
                         # Save to Notion if checkbox is checked
                         if save_to_notion:
@@ -838,7 +821,7 @@ Leave empty to let the AI research independently.""",
                                     notion.update_status(idea["page_id"], "Researching")
 
                                     # Run workflow
-                                    result = run_workflow(idea, workflow_type)
+                                    result = run_workflow(idea)
 
                                     # Update Notion
                                     notion.update_with_research(result["page_id"], result["research_brief"])

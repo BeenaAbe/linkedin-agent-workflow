@@ -2,15 +2,15 @@
 
 import os
 from dotenv import load_dotenv
-from workflow import EnhancedLinkedInWorkflow
+from workflow import LinkedInWorkflow
 
 load_dotenv()
 
 
 def test_full_workflow():
-    """Test complete workflow with sample input"""
+    """Test complete 6-agent workflow with sample input"""
     print("\n" + "="*60)
-    print("🧪 Testing Full Workflow (Research + Writing)")
+    print("🧪 Testing 6-Agent Workflow")
     print("="*60 + "\n")
 
     # Sample input
@@ -27,7 +27,7 @@ def test_full_workflow():
 
     try:
         # Run workflow
-        workflow = EnhancedLinkedInWorkflow()
+        workflow = LinkedInWorkflow()
         result = workflow.run(test_input)
 
         # Validate output

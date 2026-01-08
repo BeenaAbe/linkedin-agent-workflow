@@ -3,7 +3,7 @@
 import os
 import time
 from dotenv import load_dotenv
-from workflow import LinkedInWorkflow, AdaptiveLinkedInWorkflow
+from workflow import LinkedInWorkflow
 from integrations.notion_client import NotionClient
 from integrations.slack_notifier import SlackNotifier
 
@@ -54,9 +54,8 @@ def run_workflow_once(use_change_detection=True):
     notion = NotionClient()
     slack = SlackNotifier()
 
-    # Choose workflow type
-    # workflow = LinkedInWorkflow()  # Simple sequential workflow
-    workflow = AdaptiveLinkedInWorkflow()  # With quality checks
+    # Initialize the 6-Agent Workflow
+    workflow = LinkedInWorkflow()
 
     print("\n🔍 Checking Notion for new ideas...")
 
@@ -128,7 +127,7 @@ def run_batch():
     """Process all pending ideas immediately (batch mode)"""
     notion = NotionClient()
     slack = SlackNotifier()
-    workflow = AdaptiveLinkedInWorkflow()
+    workflow = LinkedInWorkflow()
 
     print("\n" + "="*60)
     print("🔥 BATCH MODE: Processing all pending ideas")
