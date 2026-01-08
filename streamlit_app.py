@@ -347,6 +347,11 @@ st.markdown("""
         border-right: 2px solid #e5e5e0;
     }
 
+    /* Ensure sidebar content has consistent padding */
+    [data-testid="stSidebar"] > div {
+        padding: 1rem 1rem !important;
+    }
+
     [data-testid="stSidebar"] h2 {
         font-weight: 700;
         font-size: 1.1rem;
@@ -445,11 +450,14 @@ st.markdown("""
         padding: 1.2rem 1.5rem !important;
         margin: 1rem 0 1.5rem 0 !important;
         box-shadow: 0 4px 0 #2a2a2a !important;
+        display: block !important;
+        width: calc(100% - 0rem) !important;
     }
 
     /* Ensure radio buttons container takes full width */
     [data-testid="stSidebar"] .stRadio > div {
         width: 100% !important;
+        display: block !important;
     }
 
     /* Radio button styling for Mode selection */
