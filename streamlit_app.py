@@ -46,9 +46,9 @@ st.markdown("""
         letter-spacing: -0.01em;
     }
 
-    /* Main app background - warm orange gradient (Sunlitt-inspired) */
+    /* Main app background - subtle warm gradient (Sunlitt-inspired) */
     .stApp {
-        background: linear-gradient(180deg, #f9a825 0%, #f57c00 30%, #e64a19 70%, #bf360c 100%) !important;
+        background: linear-gradient(180deg, #ffd89b 0%, #ffb88c 30%, #ff9a76 60%, #ff8566 100%) !important;
         min-height: 100vh;
     }
 
@@ -122,20 +122,20 @@ st.markdown("""
     }
 
     .badge-controversial {
-        background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
-        color: white;
+        background: linear-gradient(135deg, #f9a8d4 0%, #f472b6 100%);
+        color: #831843;
         border: none;
     }
 
     .badge-question {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%);
         color: #78350f;
         border: none;
     }
 
     .badge-story {
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-        color: white;
+        background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+        color: #9a3412;
         border: none;
     }
 
@@ -153,22 +153,22 @@ st.markdown("""
         font-weight: 400;
     }
 
-    /* Metrics - Yellow and Pink accents */
+    /* Metrics - Subtle yellow and pink accents */
     .metric-card {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
         color: #78350f;
         padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.25);
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(253, 230, 138, 0.3);
         text-align: center;
-        border: 1px solid #fde68a;
+        border: none;
     }
 
     .metric-card:nth-child(2) {
-        background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
-        color: white;
-        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.25);
-        border: 1px solid #f9a8d4;
+        background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+        color: #831843;
+        box-shadow: 0 4px 20px rgba(251, 207, 232, 0.3);
+        border: none;
     }
 
     .metric-value {
