@@ -46,9 +46,9 @@ st.markdown("""
         letter-spacing: -0.01em;
     }
 
-    /* Main app background - subtle warm gradient (Sunlitt-inspired) */
+    /* Main app background - clean off-white */
     .stApp {
-        background: linear-gradient(180deg, #ffd89b 0%, #ffb88c 30%, #ff9a76 60%, #ff8566 100%) !important;
+        background: #f5f5f0 !important;
         min-height: 100vh;
     }
 
@@ -66,22 +66,21 @@ st.markdown("""
 
     /* Main header - clean, bold, minimal */
     .main-header {
-        font-size: 4rem;
+        font-size: 3rem;
         font-weight: 800;
-        text-align: center;
-        padding: 1.5rem 0 0.5rem 0;
-        color: #ffffff;
-        letter-spacing: -0.04em;
+        text-align: left;
+        padding: 2rem 0 0.5rem 0;
+        color: #0a0a0a;
+        letter-spacing: -0.05em;
         line-height: 1;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.15);
     }
 
     .subtitle {
-        text-align: center;
-        color: rgba(255, 255, 255, 0.85);
-        font-size: 1.1rem;
-        margin-top: 0.8rem;
-        margin-bottom: 3.5rem;
+        text-align: left;
+        color: #737373;
+        font-size: 1rem;
+        margin-top: 0.5rem;
+        margin-bottom: 2rem;
         font-weight: 400;
         letter-spacing: -0.005em;
     }
@@ -91,52 +90,67 @@ st.markdown("""
         color: #0077B5;
     }
 
-    /* Hook cards - Rounded white cards like Sunlitt */
+    /* Hook cards - Rounded cards with subtle colored backgrounds */
     .hook-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        padding: 2rem;
-        border-radius: 24px;
-        border: none;
-        margin: 1.5rem 0;
-        transition: all 0.3s ease;
+        background: #ffffff;
+        padding: 1.8rem;
+        border-radius: 30px;
+        border: 2px solid #2a2a2a;
+        margin: 1.2rem 0;
+        transition: all 0.2s ease;
         position: relative;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 4px 0 #2a2a2a;
     }
 
     .hook-card:hover {
-        background: rgba(255, 255, 255, 1);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 7px 0 #2a2a2a;
+    }
+
+    /* Color variations for cards */
+    .hook-card:nth-child(1) {
+        background: #fef5e7;
+        border-color: #e8c89b;
+    }
+
+    .hook-card:nth-child(2) {
+        background: #e8f5e9;
+        border-color: #a5d6a7;
+    }
+
+    .hook-card:nth-child(3) {
+        background: #e3f2fd;
+        border-color: #90caf9;
     }
 
     .hook-type-badge {
         display: inline-block;
-        padding: 0.5rem 1.2rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-bottom: 0.8rem;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.1em;
+        border: 2px solid;
     }
 
     .badge-controversial {
-        background: linear-gradient(135deg, #f9a8d4 0%, #f472b6 100%);
-        color: #831843;
-        border: none;
+        background: #fef5e7;
+        color: #c17817;
+        border-color: #c17817;
     }
 
     .badge-question {
-        background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%);
-        color: #78350f;
-        border: none;
+        background: #e8f5e9;
+        color: #4a7c4e;
+        border-color: #4a7c4e;
     }
 
     .badge-story {
-        background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
-        color: #9a3412;
-        border: none;
+        background: #e3f2fd;
+        color: #4a7ba7;
+        border-color: #4a7ba7;
     }
 
     .hook-text {
@@ -184,15 +198,14 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    /* Progress indicators - Rounded white cards */
+    /* Progress indicators - Rounded cards with border */
     .progress-container {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border: none;
-        border-radius: 24px;
+        background: #ffffff;
+        border: 2px solid #2a2a2a;
+        border-radius: 30px;
         padding: 2rem;
         margin: 1.5rem 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 4px 0 #2a2a2a;
     }
 
     .progress-step {
@@ -249,16 +262,15 @@ st.markdown("""
         color: #5a6b7a;
     }
 
-    /* LinkedIn preview - Rounded white card */
+    /* LinkedIn preview - Rounded card with border */
     .linkedin-preview {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border: none;
-        border-radius: 24px;
+        background: #ffffff;
+        border: 2px solid #2a2a2a;
+        border-radius: 30px;
         padding: 2rem;
         max-width: 650px;
         margin: 1.5rem auto;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 4px 0 #2a2a2a;
     }
 
     .linkedin-preview-header {
@@ -282,79 +294,76 @@ st.markdown("""
         white-space: pre-wrap;
     }
 
-    /* Queue card - Rounded white card */
+    /* Queue card - Rounded card with border */
     .queue-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border: none;
-        border-radius: 20px;
+        background: #ffffff;
+        border: 2px solid #2a2a2a;
+        border-radius: 25px;
         padding: 1.5rem;
         margin: 0.8rem 0;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease;
+        box-shadow: 0 3px 0 #2a2a2a;
     }
 
     .queue-card:hover {
-        background: rgba(255, 255, 255, 1);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 0 #2a2a2a;
     }
 
-    /* Button styling - Rounded Sunlitt-style buttons */
+    /* Button styling - Rounded with border shadow */
     .stButton>button {
-        border-radius: 25px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        transition: all 0.2s ease;
+        border: 2px solid #2a2a2a;
         font-family: 'Outfit', sans-serif;
-        padding: 0.9rem 2rem;
+        padding: 0.8rem 2rem;
         letter-spacing: -0.01em;
-        background: rgba(255, 255, 255, 0.95);
-        color: #404040;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        background: #ffffff;
+        color: #2a2a2a;
+        box-shadow: 0 4px 0 #2a2a2a;
     }
 
     .stButton>button:hover {
-        background: rgba(255, 255, 255, 1);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 7px 0 #2a2a2a;
     }
 
     .stButton>button[kind="primary"] {
-        background: linear-gradient(135deg, #0077B5 0%, #005a8a 100%);
+        background: #0a0a0a;
         color: white;
-        border: none;
+        border: 2px solid #0a0a0a;
+        box-shadow: 0 4px 0 #0a0a0a;
     }
 
     .stButton>button[kind="primary"]:hover {
-        background: linear-gradient(135deg, #005a8a 0%, #004870 100%);
-        box-shadow: 0 8px 32px rgba(0, 119, 181, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 7px 0 #0a0a0a;
     }
 
-    /* Sidebar styling - Darker semi-transparent overlay */
+    /* Sidebar styling - Clean light sidebar */
     [data-testid="stSidebar"] {
-        background: rgba(0, 0, 0, 0.25) !important;
-        backdrop-filter: blur(20px);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: #fafaf8 !important;
+        border-right: 2px solid #e5e5e0;
     }
 
     [data-testid="stSidebar"] h2 {
-        font-weight: 600;
+        font-weight: 700;
         font-size: 1.1rem;
-        color: #ffffff !important;
-        letter-spacing: -0.01em;
+        color: #0a0a0a !important;
+        letter-spacing: -0.02em;
     }
 
     [data-testid="stSidebar"] h3 {
         font-weight: 600;
         font-size: 0.95rem;
-        color: rgba(255, 255, 255, 0.85) !important;
+        color: #404040 !important;
         letter-spacing: -0.01em;
     }
 
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] label {
-        color: rgba(255, 255, 255, 0.85) !important;
+        color: #404040 !important;
     }
 
     /* Sidebar connection status - Round bubble boxes */
