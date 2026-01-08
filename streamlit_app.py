@@ -847,50 +847,6 @@ def main():
             st.info("No activity yet...")
 
     # Main content area
-    # Header box with title and subtitle
-    st.markdown("""
-    <div style="
-        background: #e8f5e9;
-        border: 2px solid #2a2a2a;
-        border-radius: 30px;
-        padding: 1.5rem 2rem;
-        margin: 2rem 0;
-        box-shadow: 0 4px 0 #2a2a2a;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    ">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <div style="
-                background: #a5d6a7;
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.5rem;
-                border: 2px solid #2a2a2a;
-            ">🚀</div>
-            <div>
-                <h1 style="
-                    margin: 0;
-                    font-size: 1.8rem;
-                    font-weight: 800;
-                    color: #0a0a0a;
-                    font-family: 'Outfit', sans-serif;
-                ">LinkedIn Content Engine</h1>
-                <p style="
-                    margin: 0.3rem 0 0 0;
-                    font-size: 0.95rem;
-                    color: #404040;
-                    font-weight: 500;
-                ">AI-powered 6-agent workflow for premium LinkedIn posts</p>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
     if mode == "manual":
         st.markdown("## ✍️ Manual Input Mode")
         st.markdown("Test the workflow with custom input for rapid iteration")
